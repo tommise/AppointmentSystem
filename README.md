@@ -4,9 +4,8 @@ An online database appointment system for service companies to provide available
 
 ## Links
 
-<a href="">Link to Heroku app</a>
+<a href="https://dashboard.heroku.com/apps/tsoha-appointmentsystem-demo">Link to Heroku app</a>
 
 <a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_entity_relationship_diagram.pdf">Link to entity-relationship diagram (ERD)</a>
 
 <a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_stories.md">Link to user stories</a>
-
