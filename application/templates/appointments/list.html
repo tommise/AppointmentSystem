@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <table>
+    <tr>
+      <th>Appointment</th>
+      <th>Reserved</th>
+      <th></th>
+    </tr>
+    {% for appointment in appointments %}
+    <tr>
+      <td>{{ appointment.start_time }}</td>
+      <td>{{ appointment.reserved }}</td>
+      <td>
+	<form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
+	  <input type="submit" value="Reserve!"/>
+	</form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

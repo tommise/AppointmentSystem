@@ -1,0 +1,21 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+<form method="POST" action="{{ url_for('appointments_create') }}">
+  <table>
+    <tr>
+  <td>
+    {{ form.name.label }}
+  </td>
+  <td>
+    {{ form.name }}
+  </td>
+    </tr>
+    <tr>
+  <td colspan="2">
+    <input type="submit" value="Add a new appointment"/>
+  </td>
+    </tr>
+</form>
+{% endblock %}

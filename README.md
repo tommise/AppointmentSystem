@@ -1,6 +1,12 @@
-# AppointmentSystem
+# Appointment System
 
-Appointment system for customers to make an appointment and for the company to assign an employee for it. It is possible to track incoming revenue and the most popular services provided. 
+An online database appointment system for service companies to provide available times for an appointment, assign an employee for it and for customers to select the most convenient time available. A customer will login to the page, provide essential contact information and reserve a free appointment time. The database contains three tables: Appointment, User, Service and many-to-many connection table UserAppointment. Appropriate links to the database ERD, user stories and the app in Heroku hosting are made available below.
 
-<a href="https://www.draw.io/?lightbox=1&target=blank&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Tietokantasovellus.drawio#R7Vptc5s4EP41nul1JhlAgM1HO07T3kzn0rp3bT5lMMg2E0CckGO7v74SksyLsCGOcROn%2FZCiZbWg3WdXzwr3wFW0vsFusviMfBj2DM1f98C4ZxgOMOlfJthwgWX1uWCOA5%2BL9FwwCX5CIdSEdBn4MC0pEoRCEiRloYfiGHqkJHMxRquy2gyF5acm7hwqgonnhqr0e%2BCTBZcOLC2Xf4TBfCGfrGviTuRKZSFIF66PVgURuO6BK4wQ4VfR%2BgqGzHfSL3zehx13ty%2BGYUzaTLj%2B8tEeT%2F59cP77uvRn%2F9ykX8zlhbDy6IZLseCeYYfU3ihN3Ji9NdkIV9j%2FL9mrjlaLgMALetuj8iFViRGO3DBXoFdz8X9maYql5F3y8Jd4IzbxU0zgHGJVT0roYvhriOmzbHoK8WPgwXthpjq50erzV0YQccNbHEi9MVpOqS3liSlxMbknQST0vtErKosSVRXGfjtFz409GlgofDiiyQAzF7XzocDidu1GtugJX%2FN4RXOYKi1IFNKRTi%2FdNOFpNQvW7JkjFXYSQxATuC6IBAxvIIogwRuqIu4C07y0%2BCRRFQYOH67yFNNlii2K6SWFrkjr%2BdZ4jnx6IcD%2FhEQAHSZCW9jHroz%2FhOAgnqsaS4r9Zq3ETdMVwv5%2BLRglIdpA%2BHpxpMvSKlAE5LgII6MORkZXMDIVGA2TBAUxidgyqz6j6yRlN6UEowd4hUKEqSRGMdUczYIwrIjcMJjHdOhRsxRKYMS8FtBtayhuRIHvs8eM6uKC0TL2WRTG2pEy2mmR0WZNJDoLhKUE4hbiFMUtYoBhGvx0p5kC808Wv%2Bz9rFHPGjPvLwlKOVXRC8EI4YzUhIKghJcRj%2BbhNzYYU5wcJwPs5gyoq6Odud2pKaMVh9OdbsiIWQ7mgu%2BpK%2FDmR3Fwx6JwaVhyPF6LsPDRRo7WAflRuC5Oo8N8FhvISTsjAP0SK1T93%2BBfKcMwdEnwWOaSdU4XT7hlUCuEV3cuncK%2Ffr8cbeDIrJM2U7TEHhRmimSwYplm7BMtUyozh0SxnKFk65jDgSP5%2FuHIOQQAOdwuNc0uQ043Bk2YYyNaVihZy4rwfkxxBzZz8ReCPUbSzAJCBiWA6NrgUOiZdnWvsJyuoDa3PnyaXH%2B9M%2FoLMLT%2B%2Fv5Z09Y1W4PkODOUvahK9diNC17xGVnSB8lapXmlnV5LNymBUYE9ceM72NPZMAFDK%2B9IBlB3pK6IQG20DZWSHZHZ8440yajF%2FTP7WjfHzy5TXTTlL5jggxb0pjuCXw%2BnXcSylP2qj8%2BJdQKlgrcOTHdxsf8wz2Pu%2FlaZH5Z3%2F2cQT7P%2FRMMdkwGj3xFuDoPNgajh3m%2BxCzaSUPCiYFg94bGq9aMt7PR%2B2ZDZrxjqGmbPbowlXLYQuSvcaehuCmi8K4GxHpqtYLavhSmibC8czw1mpl5hv85pYQaMGpid%2BhibbJKmA%2BrmTycvmJXalRZH18x25Kc7VgrUzxcT%2FpVMcdirZp622ex6%2B5S0E9R1l39o56GF2HL2sUPdAIfSzr7%2BRMNdF%2Brdh1BTWeveF2rg9Ew7SeVL8LblLwDupI0kqGsk315kTEOJjPa7I1PXqlUio59%2FZLa1VsZl8LvjMuguLsdAslbG8fb4ueAvUOMv0Jm%2FuvpI%2BrKOHGQv8sq%2Beym9YBUHBx85DE7bC0qYv%2FGNzKp2a7baMpy0XJq7f3P5lrYxa3CyuNBh%2FjNbnl75b5XB9S8%3D">Link to an entity-relationship diagram (ERD)</a>
+## Links
+
+<a href="">Link to Heroku app</a>
+
+<a href="">Link to entity-relationship diagram (ERD)</a>
+
+<a href="">Link to user stories</a>
 
