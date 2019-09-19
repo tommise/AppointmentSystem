@@ -13,11 +13,11 @@
       <td>{{ appointment.start_time }}</td>
       <td>{{ appointment.account_id}}</td>   
       <td>{{ appointment.reserved }}</td>
-      <td>
-  <form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
-    <input type="submit" value="Reserve"/>
-  </form>
-      </td>   
+      <td> 
+  <form method="POST" action="{{ url_for('appointments_delete', appointment_id=appointment.id) }}">
+    <input type="submit" value="Remove"/>
+  </form>      
+      </td>
     </tr>
     {% endfor %}
   </table>

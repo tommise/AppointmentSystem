@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{{ error }}
+  <table>
+    <tr>
+      <th>Appointment</th>
+      <th>Employee</th>
+      <th>Reserved</th>
+      <th>Update appointment</th>
+      <th>Update employee</th>
+      <th>Update reserved</th>      
+    </tr>
+    {% for appointment in appointments %}
+    <tr></tr>
+      <td>{{ appointment.start_time }}</td>
+      <td>{{ appointment.account_id}}</td>   
+      <td>{{ appointment.reserved }}</td>    
+      
+            <form method="POST" action="{{ url_for('appointments_updates', appointment_id=appointment.id) }}">          
+              <td>{{ form.start_time }}</td>   
+              <td>{{ form.employee_id }}</td>
+              <td>{{ form.reserved }}</td>   
+              <td><input type="submit" value="Update"/></td>                            
+            </form>      
+                
+              </tr>
+              {% endfor %}
+            </table>        
+
+{% endblock %}

@@ -1,7 +1,15 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <p>
-    Hello! Make a new appointment time or list all current appointments.
-  </p>
+  <body>
+      {% if current_user.is_authenticated %}
+      <p>
+      Welcome! Please select appropriate function from the list.
+      </p>
+      {% else %}
+      <p>
+      Please log in or sign up in order to add an appointment.  
+      </p>      
+      {% endif %}
+    <ul>  
 {% endblock %}
