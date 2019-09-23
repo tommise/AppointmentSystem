@@ -8,6 +8,7 @@ class Appointment(db.Model):
     reserved = db.Column(db.Boolean, nullable=False)
 
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=True)
 
     def __init__(self, start_time):
         self.start_time = start_time

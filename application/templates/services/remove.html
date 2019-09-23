@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <table>
+    <tr>
+      <th>Service</th>
+      <th>Price</th>
+      <th></th>
+    </tr>
+    {% for service in services %}
+    <tr>
+      <td>{{ service.service }}</td>
+      <td>{{ service.price}}</td>   
+      <td> 
+  <form method="POST" action="{{ url_for('services_delete', service_id=service.id) }}">
+    <input type="submit" value="Remove"/>
+  </form>      
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

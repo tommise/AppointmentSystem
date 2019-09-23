@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <table>
+    <tr>
+      <th>Service</th>
+      <th>Price</th>
+      <th></th>
+    </tr>
+    {% for service in services %}
+    <tr>
+      <td>{{ service.service }}</td>
+      <td>{{ service.price}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

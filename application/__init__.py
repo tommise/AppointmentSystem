@@ -20,6 +20,7 @@ from application.appointments import views
 from application.auth import models
 from application.auth import views
 from application.signup import views
+from application.services import views
 
 # login
 from application.auth.models import User

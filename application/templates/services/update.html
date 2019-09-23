@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{{ error }}
+  <table>
+    <tr>
+      <th>Service</th>
+      <th>Price</th>
+      <th>Update service</th>
+      <th>Update price</th>    
+    </tr>
+    {% for service in services %}
+    <tr></tr>
+      <td>{{ service.service }}</td>
+      <td>{{ service.price}}</td>   
+      
+            <form method="POST" action="{{ url_for('services_updates', service_id=service.id) }}">          
+              <td>{{ form.service }}</td>   
+              <td>{{ form.price }}</td>  
+              <td><input type="submit" value="Update"/></td>                            
+            </form>      
+                
+              </tr>
+              {% endfor %}
+            </table>        
+
+{% endblock %}
