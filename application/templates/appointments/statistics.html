@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h3>
+    Listing all users without an reservation
+</h3>
+<p></p>
+
+{% if users_without_reservation is defined %}
+
+    <table>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th></th>
+        </tr>
+        {% for user in users_without_reservation %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.username}}</td>   
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
+
+{% endblock %}

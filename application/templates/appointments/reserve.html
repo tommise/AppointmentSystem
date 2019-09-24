@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <table>
+
+    <h3>Reserve a free appointment time from the list below</h3>
+    
+    <tr>
+      <th>Appointment</th>
+      <th>Employee</th>
+      <th></th>
+    </tr>
+    {% for appointment in appointments %}
+    <tr>
+
+    {% if appointment.reserved == False %}
+
+      <td>{{ appointment.start_time }}</td>
+      <td>{{ appointment.account_id }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
+            <input type="submit" value="Reserve"/>
+        </form>
+    </td>
+
+    {% endif %}
+    
+    </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

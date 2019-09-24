@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for
 from flask_login import current_user
 
 from application import app, db, login_required
+from application.auth.models import User
 from application.appointments.models import Appointment
 from application.appointments.forms import AppointmentForm
 from application.appointments.forms import UpdateAppointmentForm
@@ -25,18 +26,21 @@ def appointments_form():
 @login_required(role="ADMIN")
 def appointments_create():
 
+    user = User.query.get(current_user.id)
+
     form = AppointmentForm(request.form)
 
     if not form.validate():
         return render_template("appointments/new.html", form = form)    
 
     t = Appointment(form.name.data)
-    t.account_id = current_user.id
-  
     db.session().add(t)
+
+    t.accountappointment.append(user)
+
     db.session().commit()
   
-    return redirect(url_for("appointments_index")) 
+    return redirect(url_for("appointments_index"))
 
 # Removing an appointment
 
@@ -82,20 +86,36 @@ def appointments_updates(appointment_id):
   
     return redirect(url_for("appointments_update"))
 
-# Reserving an appointment
+# Reserving and cancelling an appointment
 
-@app.route("/appointments/", methods=["POST"])
+@app.route("/appointments/reserve/", methods=["GET"])
 @login_required(role="ANY")
 def appointments_reserve():
 
     return render_template("appointments/reserve.html", appointments = Appointment.query.all())
 
-@app.route("/appointments/<appointment_id>/", methods=["POST"])
+@app.route("/appointments/reserve/<appointment_id>/", methods=["POST"])
 @login_required(role="ANY")
 def appointment_set_reserved(appointment_id):
 
+    user = User.query.get(current_user.id)
+
     t = Appointment.query.get(appointment_id)
+
+    if t.reserved is True:
+        t.reserved = False
+    elif t.reserved is False:
+        t.reserved = True
+    
+    t.accountappointment.append(user)        
 
     db.session().commit()
   
     return redirect(url_for("appointments_index"))    
+
+# Statistics
+
+@app.route('/appointments/statistics/')
+@login_required(role="ADMIN")
+def admin_statistics():
+    return render_template("appointments/statistics.html", users_without_reservation = User.get_users_without_reservation())
