@@ -1,15 +1,22 @@
 {% extends "layout.html" %}
-
+ 
 {% block body %}
-  <body>
-      {% if current_user.is_authenticated %}
-      <p>
-      Welcome! Please select appropriate function from the list.
-      </p>
+ 
+      {% if current_user.is_authenticated and current_user.get_role() == 'USER' %}
+      
+      <h3>Welcome {{ current_user.name }}!</h3>
+      <p>Please reserve an appointment or control your appointments from 'My appointments'.</p>
+ 
+      {% elif current_user.is_authenticated and current_user.get_role() == 'ADMIN' %}
+ 
+      <h3>Welcome {{ current_user.name }}!</h3>
+      <p>Please select an appropriate function from the dropdown menus.</p>
+ 
       {% else %}
-      <p>
-      Please log in or sign up in order to add an appointment.  
-      </p>      
+ 
+      <h3>Welcome to an appointment system!</h3> 
+      <p>In order to reserve an appointment, please log in or sign up from the right top corner. </p>
+ 
       {% endif %}
-    <ul>  
+ 
 {% endblock %}
