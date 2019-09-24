@@ -1,34 +1,28 @@
 from flask import render_template, request, redirect, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
-from application import app, db
+from application import app, db, login_required
 from application.appointments.models import Appointment
 from application.appointments.forms import AppointmentForm
 from application.appointments.forms import UpdateAppointmentForm
 from datetime import datetime
 
+# Listing appointments
+
 @app.route("/appointments/", methods=["GET"])
-@login_required
+@login_required(role="ANY")
 def appointments_index():
     return render_template("appointments/list.html", appointments = Appointment.query.all())
 
+# Creating an appointment
+
 @app.route("/appointments/new/")
-@login_required
+@login_required(role="ADMIN")
 def appointments_form():
     return render_template("appointments/new.html", form = AppointmentForm())
 
-@app.route("/appointments/<appointment_id>/", methods=["POST"])
-@login_required
-def appointment_set_reserved(appointment_id):
-
-    t = Appointment.query.get(appointment_id)
-
-    db.session().commit()
-  
-    return redirect(url_for("appointments_index"))
-
 @app.route("/appointments/", methods=["POST"])
-@login_required
+@login_required(role="ADMIN")
 def appointments_create():
 
     form = AppointmentForm(request.form)
@@ -44,21 +38,15 @@ def appointments_create():
   
     return redirect(url_for("appointments_index")) 
 
-@app.route("/appointments/", methods=["POST"])
-@login_required
-def appointments_reserve():
-
-    return render_template("appointments/reserve.html", appointments = Appointment.query.all()) 
-
-## Removing an appointment
+# Removing an appointment
 
 @app.route("/appointments/remove/", methods=["GET"])
-@login_required
+@login_required(role="ADMIN")
 def appointments_remove():
     return render_template("appointments/remove.html", appointments = Appointment.query.all())
 
 @app.route("/appointments/remove/<appointment_id>/", methods=["POST"])
-@login_required
+@login_required(role="ADMIN")
 def appointments_delete(appointment_id):
 
     t = Appointment.query.get(appointment_id)
@@ -68,15 +56,15 @@ def appointments_delete(appointment_id):
 
     return redirect(url_for("appointments_remove")) 
 
-## Updating an appointment    
+# Updating an appointment    
 
 @app.route("/appointments/update/", methods=["GET"])
-@login_required
+@login_required(role="ADMIN")
 def appointments_update():
     return render_template("appointments/update.html", appointments = Appointment.query.all(), form = UpdateAppointmentForm())
 
 @app.route("/appointments/update/<appointment_id>/", methods=["GET", "POST"])
-@login_required
+@login_required(role="ADMIN")
 def appointments_updates(appointment_id):
 
     form = UpdateAppointmentForm(request.form) 
@@ -93,3 +81,21 @@ def appointments_updates(appointment_id):
     db.session().commit()
   
     return redirect(url_for("appointments_update"))
+
+# Reserving an appointment
+
+@app.route("/appointments/", methods=["POST"])
+@login_required(role="ANY")
+def appointments_reserve():
+
+    return render_template("appointments/reserve.html", appointments = Appointment.query.all())
+
+@app.route("/appointments/<appointment_id>/", methods=["POST"])
+@login_required(role="ANY")
+def appointment_set_reserved(appointment_id):
+
+    t = Appointment.query.get(appointment_id)
+
+    db.session().commit()
+  
+    return redirect(url_for("appointments_index"))    

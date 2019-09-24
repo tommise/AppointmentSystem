@@ -1,4 +1,6 @@
 from application import db
+from sqlalchemy.sql import text
+from flask_login import current_user
 
 class User(db.Model):
 
@@ -12,11 +14,6 @@ class User(db.Model):
 
     appointments = db.relationship("Appointment", backref='account', lazy=True)
 
-    '''
-    def __init__(self, name):
-        self.name = name
-    '''
-    
     def __init__(self, name, username, password, employee):
         self.name = name
         self.username = username
@@ -36,4 +33,10 @@ class User(db.Model):
         return False
 
     def is_authenticated(self):
-        return True
+        return True   
+
+    def get_role(self):
+        if self.employee is True:
+            return "ADMIN"
+        elif self.employee is False:
+            return "USER"                  

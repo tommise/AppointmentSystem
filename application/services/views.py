@@ -1,24 +1,26 @@
 from flask import render_template, request, redirect, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
-from application import app, db
+from application import app, db, login_required
 from application.services.models import Service
 from application.services.forms import ServiceForm
 
+# Listing services
+
 @app.route("/services/", methods=["GET"])
-@login_required
+@login_required(role="ANY")
 def services_list():
     return render_template("services/list.html", services = Service.query.all())
 
 # Creating a new service
 
 @app.route("/services/new/")
-@login_required
+@login_required(role="ADMIN")
 def services_form():
     return render_template("services/new.html", form = ServiceForm())  
 
 @app.route("/services/", methods=["POST"])
-@login_required
+@login_required(role="ADMIN")
 def services_create():
 
     form = ServiceForm(request.form)
@@ -36,12 +38,12 @@ def services_create():
 # Removing a service
 
 @app.route("/service/remove/", methods=["GET"])
-@login_required
+@login_required(role="ADMIN")
 def services_remove():
     return render_template("services/remove.html", services = Service.query.all())
 
 @app.route("/services/remove/<service_id>/", methods=["POST"])
-@login_required
+@login_required(role="ADMIN")
 def services_delete(service_id):
 
     t = Service.query.get(service_id)
@@ -54,12 +56,12 @@ def services_delete(service_id):
 # Updating a service   
 
 @app.route("/services/update/", methods=["GET"])
-@login_required
+@login_required(role="ADMIN")
 def services_update():
     return render_template("services/update.html", services = Service.query.all(), form = ServiceForm())
 
 @app.route("/services/update/<service_id>/", methods=["GET", "POST"])
-@login_required
+@login_required(role="ADMIN")
 def services_updates(service_id):
 
     form = ServiceForm(request.form) 
