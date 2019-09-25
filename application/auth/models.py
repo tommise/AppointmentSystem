@@ -46,7 +46,7 @@ class User(db.Model):
                     " LEFT JOIN AccountAppointment ON AccountAppointment.account_id = account.id"
                     " LEFT JOIN Appointment ON AccountAppointment.appointment_id = appointment.id"
                     " WHERE Account.employee = FALSE"
-                    " GROUP BY account.name"
+                    " GROUP BY account.name, account.username"
                     " HAVING COUNT(Appointment.id) = 0;")
 
         res = db.engine.execute(stmt)
