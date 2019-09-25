@@ -39,11 +39,9 @@ def appointments_create():
         return render_template("appointments/new.html", form = form) 
        
     t = Appointment(form.name.data)
-    # t.service_id = 
+    t.accountappointment.append(user)  
+
     db.session().add(t)
-
-    t.accountappointment.append(user)
-
     db.session().commit()
   
     return redirect(url_for("appointments_index"))

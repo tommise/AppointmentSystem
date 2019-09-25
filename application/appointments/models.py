@@ -15,9 +15,7 @@ class Appointment(db.Model):
     reserved = db.Column(db.Boolean, nullable=False)
 
     accountappointment = db.relationship("User", secondary = account_appointment, 
-        lazy="subquery", backref = db.backref("appointments", lazy = True))        
-
-    #service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=True)
+        lazy="subquery", backref = db.backref("appointments", lazy = True))
 
     def __init__(self, start_time):
         self.start_time = start_time

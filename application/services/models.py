@@ -14,8 +14,6 @@ class Service(db.Model):
 
     serviceappointment = db.relationship("Appointment", secondary = service_appointment, 
         lazy="subquery", backref = db.backref("services", lazy = True))
-
-    #appointments = db.relationship("Appointment", backref='service.id', lazy=True)   
     
     def __init__(self, service, price):
         self.service = service
