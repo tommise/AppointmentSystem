@@ -39,7 +39,7 @@ def appointments_create():
         return render_template("appointments/new.html", form = form) 
        
     t = Appointment(form.name.data)
-    t.service_id = 0
+    # t.service_id = 
     db.session().add(t)
 
     t.accountappointment.append(user)
