@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    {% if current_user.is_authenticated and current_user.get_role() == 'ADMIN' %}
+
+    <table>
+        <tr>
+          <th>Start time</th>
+          <th>Username</th>
+          <th></th>
+        </tr>
+        {% for reservation in user_reservations %}
+        <tr>
+          <td>{{ reservation.start_time }}</td>
+          <td>{{ reservation.username }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% elif current_user.is_authenticated and current_user.get_role() == 'USER' %} 
+
+    <table>
+        <tr>
+          <th>Start time</th>
+          <th>Employee</th>
+          <th></th>
+        </tr>
+        {% for reservation in user_reservations %}
+        <tr>
+          <td>{{ reservation.start_time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endif %} 
+
+{% endblock %}

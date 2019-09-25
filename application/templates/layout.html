@@ -24,7 +24,7 @@
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">My appointments</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ url_for('appointments_reserve') }}">Reserve an appointment</a>
-            <a class="dropdown-item" href="#">List my appointments</a>            
+            <a class="dropdown-item" href="{{ url_for('my_appointments') }}">List my appointments</a>            
             <a class="dropdown-item" href="#">Cancel an appointment</a>                                  
           </div>
         </li>
@@ -41,7 +41,7 @@
               <a class="dropdown-item" href="{{ url_for('appointments_index') }}">List all appointments</a>
               <a class="dropdown-item" href="{{ url_for('appointments_remove') }}">Remove an appointment</a>
               <a class="dropdown-item" href="{{ url_for('appointments_update') }}">Update an appointment</a>   
-              <a class="dropdown-item" href="{{ url_for('appointments_index') }}">List all my appointments</a>                   
+              <a class="dropdown-item" href="{{ url_for('my_appointments') }}">List all my appointments</a>                   
             </div>
         </li>
 

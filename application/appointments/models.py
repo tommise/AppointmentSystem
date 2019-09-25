@@ -1,5 +1,6 @@
 
 from application import db
+from sqlalchemy.sql import text
 from datetime import datetime
 
 # Creating a many-to-many *-* relationship table between account and appointment
@@ -21,3 +22,19 @@ class Appointment(db.Model):
     def __init__(self, start_time):
         self.start_time = start_time
         self.reserved = False
+
+    @staticmethod
+    def get_reservations_by_id(id):
+ 
+        stmt = text("SELECT Appointment.start_time, Account.username FROM Account"
+                    " LEFT JOIN AccountAppointment ON AccountAppointment.account_id = account.id"
+                    " LEFT JOIN Appointment ON AccountAppointment.appointment_id = appointment.id"
+                    " WHERE Account.id = :uid;").params(uid = id)                   
+
+        res = db.engine.execute(stmt)
+        
+        response = []
+        for row in res:
+            response.append({"start_time":row[0], "username":row[1]})
+ 
+        return response        

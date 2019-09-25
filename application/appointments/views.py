@@ -15,6 +15,11 @@ from datetime import datetime
 def appointments_index():
     return render_template("appointments/list.html", appointments = Appointment.query.all())
 
+@app.route("/appointments/myappointments", methods=["GET"])
+@login_required(role="ANY")
+def my_appointments():
+    return render_template("appointments/myappointments.html", user_reservations = Appointment.get_reservations_by_id(current_user.id))  
+
 # Creating an appointment
 
 @app.route("/appointments/new/")
@@ -111,7 +116,7 @@ def appointment_set_reserved(appointment_id):
 
     db.session().commit()
   
-    return redirect(url_for("appointments_index"))    
+    return redirect(url_for("my_appointments"))    
 
 # Statistics
 
