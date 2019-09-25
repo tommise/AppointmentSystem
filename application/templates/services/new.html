@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
 <form method="POST" action="{{ url_for('services_create') }}">
-  <table>
+  <table class="table">
     <tr>
   <td>
     {{ form.service.label }}

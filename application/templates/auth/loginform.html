@@ -1,10 +1,14 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{{ error }}
-<form method="POST" action="{{ url_for('auth_login') }}">
-  <table>
 
+<h3>Logging in to Appointment System</h3>
+<p></p>
+<p>In order to log in, please enter your username and password to their corresponding fields and press "Login".</p>
+<p></p>
+
+<form method="POST" action="{{ url_for('auth_login') }}">
+  <table class="table">
     <tr>
       <td>
 	{{ form.username.label }}
@@ -36,11 +40,13 @@
           </ul>
       </td>        
     </tr>
-
     <tr>
       <td colspan="2">
 	<input type="submit" value="Login"/>
       </td>
     </tr>
 </form>
+
+{{ error }}
+
 {% endblock %}

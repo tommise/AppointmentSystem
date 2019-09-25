@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <table>
+  <table class="table table-sm">
     <tr>
       <th>Appointment</th>
       <th>Employee</th>
@@ -11,7 +11,7 @@
     {% for appointment in appointments %}
     <tr>
       <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.account_id}}</td>   
+      <td>{{ appointment.accountappointment}}</td>   
       <td>{{ appointment.reserved }}</td>
       <td> 
   <form method="POST" action="{{ url_for('appointments_delete', appointment_id=appointment.id) }}">

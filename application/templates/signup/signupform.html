@@ -1,9 +1,14 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{{ error }}
+
+<h3>Signing up to Appointment System</h3>
+<p></p>
+<p>In order to sign up, please enter your name, username and password to their corresponding fields and press "Sign up".</p>
+<p></p>
+
 <form method="POST" action="{{ url_for('signup_new') }}">
-  <table>
+  <table class="table">
     <tr>
 	  <td>
 	  {{ form.name.label }}

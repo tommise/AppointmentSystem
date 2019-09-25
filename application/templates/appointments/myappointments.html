@@ -4,7 +4,7 @@
 
     {% if current_user.is_authenticated and current_user.get_role() == 'ADMIN' %}
 
-    <table>
+    <table class="table">
         <tr>
           <th>Start time</th>
           <th>Username</th>
@@ -20,7 +20,7 @@
 
     {% elif current_user.is_authenticated and current_user.get_role() == 'USER' %} 
 
-    <table>
+    <table class="table">
         <tr>
           <th>Start time</th>
           <th>Employee</th>

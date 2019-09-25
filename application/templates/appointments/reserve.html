@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <table>
+  <table class="table">
 
     <h3>Reserve a free appointment time from the list below</h3>
     
@@ -16,7 +16,7 @@
     {% if appointment.reserved == False %}
 
       <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.account_id }}</td>
+      <td>{{ appointment.accountappointment }}</td>
       <td>
         <form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
             <input type="submit" value="Reserve"/>
