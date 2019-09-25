@@ -36,9 +36,10 @@ def appointments_create():
     form = AppointmentForm(request.form)
 
     if not form.validate():
-        return render_template("appointments/new.html", form = form)    
-
+        return render_template("appointments/new.html", form = form) 
+       
     t = Appointment(form.name.data)
+    t.service_id = 0
     db.session().add(t)
 
     t.accountappointment.append(user)
