@@ -67,7 +67,7 @@ def services_updates(service_id):
     form = ServiceForm(request.form) 
 
     if not form.validate():
-        return render_template("services/update.html", form = form)
+        return render_template("services/update.html", services = Service.query.all(), form = form)
 
     t = Service.query.get(service_id)
 

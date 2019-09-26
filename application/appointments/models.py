@@ -41,7 +41,7 @@ class Appointment(db.Model):
     @staticmethod
     def get_appointments():
  
-        stmt = text("SELECT Appointment.id, Appointment.start_time, Account.username, Appointment.reserved FROM Account"
+        stmt = text("SELECT Appointment.id, Appointment.start_time, Account.name, Appointment.reserved FROM Account"
                     " LEFT JOIN AccountAppointment ON AccountAppointment.account_id = account.id"
                     " LEFT JOIN Appointment ON AccountAppointment.appointment_id = appointment.id"
                     " WHERE Account.employee = True AND Appointment.id IS NOT NULL"

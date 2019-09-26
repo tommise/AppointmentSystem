@@ -69,21 +69,51 @@ def appointments_delete(appointment_id):
 @app.route("/appointments/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_update():
-    return render_template("appointments/update.html", appointments = Appointment.get_appointments(), form = UpdateAppointmentForm())
+
+    form1 = UpdateAppointmentForm()
+
+    employees = User.query.filter_by(employee = True)
+    employeelist = [(i.id, i.name) for i in employees]
+    form1.employees.choices = employeelist
+
+    users = User.query.filter_by(employee = False)
+    userslist = [(i.id, i.name) for i in users]
+    form1.users.choices = userslist
+
+    return render_template("appointments/update.html", appointments = Appointment.get_appointments(), form = form1)
 
 @app.route("/appointments/update/<appointment_id>/", methods=["GET", "POST"])
 @login_required(role="ADMIN")
 def appointments_updates(appointment_id):
 
-    form = UpdateAppointmentForm(request.form) 
+    form = UpdateAppointmentForm(request.form)
 
+    employees = User.query.filter_by(employee = True)
+    employeelist = [(i.id, i.name) for i in employees]
+    form.employees.choices = employeelist
+
+    users = User.query.filter_by(employee = False)
+    userslist = [(i.id, i.name) for i in users]
+    form.users.choices = userslist
+    employeelist = [(i.id, i.name) for i in employees]
+    form.employees.choices = employeelist  
+    
     if not form.validate():
-        return render_template("appointments/update.html", form = form)
+        return render_template("appointments/update.html", appointments = Appointment.get_appointments(), form = form)
 
     t = Appointment.query.get(appointment_id)
 
+    user_id = form.users.data
+    employee_id = form.employees.data
+
+    new_user = User.query.get(user_id)
+    new_employee = User.query.get(employee_id)
+
+    t.accountappointment.clear()
+    t.accountappointment.append(new_user)
+    t.accountappointment.append(new_employee)
+
     t.start_time = form.start_time.data
-    t.account_id = form.employee_id.data
     t.reserved = form.reserved.data
 
     db.session().commit()

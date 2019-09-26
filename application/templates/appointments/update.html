@@ -3,12 +3,16 @@
 {% block body %}
 {{ error }}
   <table class="table table-sm">
+
+    <p>Listing is automatically ordered by appointment time in ascending order. Updated time may not stay in the same line based on this.</p>
+
     <tr>
       <th>Appointment</th>
       <th>Employee</th>
       <th>Reserved</th>
       <th>Update appointment time</th>
       <th>Update employee</th>
+      <th>Update user</th>
       <th>Update reserved</th>      
     </tr>
     {% for appointment in appointments %}
@@ -23,8 +27,22 @@
       {% endif %}   
       
             <form method="POST" action="{{ url_for('appointments_updates', appointment_id=appointment.id) }}">          
-              <td>{{ form.start_time }}</td>   
-              <td>{{ form.employee_id }}</td>
+              <td>{{ form.start_time }}</td>
+
+              <td>{{ form.employees }}</td>
+              <ul>
+                  {% for error in form.employees.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>  
+
+              <td>{{ form.users }} </td>
+              <ul>
+                  {% for error in form.users.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+              </ul>  
+
               <td>{{ form.reserved }}</td>   
               <td><input type="submit" value="Update"/></td>                            
             </form>      

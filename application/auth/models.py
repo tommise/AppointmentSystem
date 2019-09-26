@@ -55,4 +55,20 @@ class User(db.Model):
         for row in res:
             response.append({"name":row[0], "username":row[1]})
  
-        return response        
+        return response 
+
+    @staticmethod
+    def get_all_employees():
+ 
+        stmt = text("SELECT Account.name, Account.id FROM Account"
+                    " WHERE Account.employee = TRUE"
+                    " ORDER BY Account.id;")
+
+        res = db.engine.execute(stmt)
+        
+        response = []
+        for row in res:
+            response.append({"name":row[0]})
+ 
+        return response
+                   
