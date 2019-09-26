@@ -2,6 +2,8 @@
 
 {% block body %}
 
+    <h3>Listing my appointments</h3>
+
     {% if current_user.is_authenticated and current_user.get_role() == 'ADMIN' %}
 
     <table class="table">

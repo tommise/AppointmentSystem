@@ -2,6 +2,11 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
+<h3>Add a new appointment</h3>
+<p></p>
+<p>Please select an appropriate date and time and click "Add a new appointment".</p>
+
 <form method="POST" action="{{ url_for('appointments_create') }}">
   <table class="table">
     <tr>
