@@ -16,7 +16,7 @@
     {% if appointment.reserved == False %}
 
       <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.accountappointment }}</td>
+      <td>{{ appointment.employee }}</td>
       <td>
         <form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
             <input type="submit" value="Reserve"/>

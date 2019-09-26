@@ -13,7 +13,7 @@ from datetime import datetime
 @app.route("/appointments/", methods=["GET"])
 @login_required(role="ANY")
 def appointments_index():
-    return render_template("appointments/list.html", appointments = Appointment.query.all())
+    return render_template("appointments/list.html", appointments = Appointment.get_appointments())
 
 @app.route("/appointments/myappointments", methods=["GET"])
 @login_required(role="ANY")
@@ -51,7 +51,7 @@ def appointments_create():
 @app.route("/appointments/remove/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_remove():
-    return render_template("appointments/remove.html", appointments = Appointment.query.all())
+    return render_template("appointments/remove.html", appointments = Appointment.get_appointments())
 
 @app.route("/appointments/remove/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
@@ -69,7 +69,7 @@ def appointments_delete(appointment_id):
 @app.route("/appointments/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_update():
-    return render_template("appointments/update.html", appointments = Appointment.query.all(), form = UpdateAppointmentForm())
+    return render_template("appointments/update.html", appointments = Appointment.get_appointments(), form = UpdateAppointmentForm())
 
 @app.route("/appointments/update/<appointment_id>/", methods=["GET", "POST"])
 @login_required(role="ADMIN")
@@ -96,7 +96,7 @@ def appointments_updates(appointment_id):
 @login_required(role="ANY")
 def appointments_reserve():
 
-    return render_template("appointments/reserve.html", appointments = Appointment.query.all())
+    return render_template("appointments/reserve.html", appointments = Appointment.get_appointments())
 
 @app.route("/appointments/reserve/<appointment_id>/", methods=["POST"])
 @login_required(role="ANY")

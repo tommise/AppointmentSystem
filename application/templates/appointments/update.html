@@ -7,15 +7,20 @@
       <th>Appointment</th>
       <th>Employee</th>
       <th>Reserved</th>
-      <th>Update appointment</th>
+      <th>Update appointment time</th>
       <th>Update employee</th>
       <th>Update reserved</th>      
     </tr>
     {% for appointment in appointments %}
     <tr></tr>
       <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.accountappointment}}</td>   
-      <td>{{ appointment.reserved }}</td>    
+      <td>{{ appointment.employee }}</td> 
+        
+      {% if appointment.reserved == 1 %}
+      <td>True</td> 
+      {% elif appointment.reserved == 0 %}
+      <td>False</td> 
+      {% endif %}   
       
             <form method="POST" action="{{ url_for('appointments_updates', appointment_id=appointment.id) }}">          
               <td>{{ form.start_time }}</td>   

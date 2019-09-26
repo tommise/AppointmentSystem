@@ -10,9 +10,14 @@
     </tr>
     {% for appointment in appointments %}
     <tr>
-      <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.accountappointment}}</td>   
-      <td>{{ appointment.reserved }}</td>
+        <td>{{ appointment.start_time }}</td>  
+        <td>{{ appointment.employee }}</td>
+
+        {% if appointment.reserved == 1 %}
+        <td>True</td> 
+        {% elif appointment.reserved == 0 %}
+        <td>False</td> 
+        {% endif %}
       <td> 
   <form method="POST" action="{{ url_for('appointments_delete', appointment_id=appointment.id) }}">
     <input type="submit" value="Remove"/>
