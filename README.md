@@ -10,7 +10,11 @@ An online database appointment system for service companies to provide available
 
 <a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_stories.md">Link to user stories</a>
 
+<a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_structure.md">Link to database structure</a>
+
 ## Login credentials for the app:
 
-Test username: admin-test
-Test password: test
+Role | Username | Password
+------------ | ------------ | -------------
+Employee | admin-test | test
+User | user-test | test
