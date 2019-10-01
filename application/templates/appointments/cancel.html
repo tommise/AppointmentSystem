@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+  <h3>Cancel an appointment</h3>
+  <p>Please cancel a chosen appointment time from the list below by clicking "Remove".</p>
+
+  <table class="table table-sm table-hover">
+    
+    <tr>
+      <th>Appointment</th>
+      <th>Employee</th>
+      <th></th>
+    </tr>
+
+    {% for reservation in appointments %}
+    <tr>
+      {% if reservation.accountappointment[1] is defined %}
+        {% if reservation.accountappointment[1].id == current_user.id %}
+      <td>{{ reservation.start_time }}</td>
+      <td>{{ reservation.accountappointment[0].username }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('appointment_set_cancel', appointment_id=reservation.id) }}">
+            <input type="submit" value="Cancel"/>
+        </form>
+    </td>
+      {% endif %}
+    {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

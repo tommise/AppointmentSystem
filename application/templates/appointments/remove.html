@@ -3,27 +3,29 @@
 {% block body %}
 
 <h3>Remove an appointment</h3>
-<p></p>
 <p>Please remove appointment of choice by clicking "Remove".</p>
-<p></p>
 
   <table class="table table-sm table-hover">
     <tr>
       <th>Appointment</th>
       <th>Employee</th>
+      <th>User</th>      
       <th>Reserved</th>
-      <th></th>
+      <th>Remove</th>
     </tr>
     {% for appointment in appointments %}
     <tr>
-        <td>{{ appointment.start_time }}</td>  
-        <td>{{ appointment.employee }}</td>
+      <td>{{ appointment.start_time }}</td>  
+      <td>{{ appointment.accountappointment[0].username }}</td>
 
-        {% if appointment.reserved == 1 %}
-        <td>True</td> 
-        {% elif appointment.reserved == 0 %}
-        <td>False</td> 
-        {% endif %}
+      {% if appointment.accountappointment[1] is defined %}
+      <td>{{ appointment.accountappointment[1].username }}</td>
+      {% else %}
+      <td></td>
+      {% endif %}
+
+      <td>{{ appointment.reserved }} </td>
+      
       <td> 
   <form method="POST" action="{{ url_for('appointments_delete', appointment_id=appointment.id) }}">
     <input type="submit" value="Remove"/>

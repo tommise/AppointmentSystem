@@ -13,12 +13,12 @@ from datetime import datetime
 @app.route("/appointments/", methods=["GET"])
 @login_required(role="ANY")
 def appointments_index():
-    return render_template("appointments/list.html", appointments = Appointment.get_appointments())
+    return render_template("appointments/list.html", appointments = Appointment.query.all())
 
 @app.route("/appointments/myappointments", methods=["GET"])
 @login_required(role="ANY")
 def my_appointments():
-    return render_template("appointments/myappointments.html", user_reservations = Appointment.get_reservations_by_id(current_user.id))  
+    return render_template("appointments/myappointments.html", user_reservations = Appointment.query.all())  
 
 # Creating an appointment
 
@@ -51,7 +51,7 @@ def appointments_create():
 @app.route("/appointments/remove/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_remove():
-    return render_template("appointments/remove.html", appointments = Appointment.get_appointments())
+    return render_template("appointments/remove.html", appointments = Appointment.query.all())
 
 @app.route("/appointments/remove/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
@@ -120,7 +120,7 @@ def appointments_updates(appointment_id):
   
     return redirect(url_for("appointments_update"))
 
-# Reserving and cancelling an appointment
+# Reserving an appointment
 
 @app.route("/appointments/reserve/", methods=["GET"])
 @login_required(role="ANY")
@@ -146,6 +146,31 @@ def appointment_set_reserved(appointment_id):
     db.session().commit()
   
     return redirect(url_for("my_appointments"))    
+
+# Cancelling an appointment
+
+@app.route("/appointments/cancel/", methods=["GET"])
+@login_required(role="ANY")
+def appointments_cancel():
+
+    return render_template("appointments/cancel.html", appointments = Appointment.query.all())
+
+@app.route("/appointments/cancel/<appointment_id>/", methods=["POST"])
+@login_required(role="ANY")
+def appointment_set_cancel(appointment_id):
+
+    t = Appointment.query.get(appointment_id)
+
+    employee = t.accountappointment[0]
+    
+    t.reserved = False
+    t.accountappointment.clear()
+
+    t.accountappointment.append(employee)
+
+    db.session().commit()
+  
+    return redirect(url_for("appointments_cancel"))
 
 # Statistics
 
