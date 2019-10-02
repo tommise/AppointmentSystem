@@ -28,6 +28,12 @@ def services_create():
     if not form.validate():
         return render_template("services/new.html", form = form)
 
+    serviceExists = Service.query.filter_by(service = form.service.data).first()
+
+    if serviceExists:
+        form.service.errors.append("This service name is already in use. Please choose another service name.")
+        return render_template("services/new.html", form = form)
+
     t = Service(form.service.data, form.price.data)
   
     db.session().add(t)

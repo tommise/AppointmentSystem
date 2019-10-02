@@ -11,7 +11,8 @@
         <th>Employee</th>
         <th>User</th>
         <th>Reserved</th>
-        <th></th>
+        <th>Service</th>
+        <th>Price</th>
       </tr>
       {% for appointment in appointments %}
       <tr>
@@ -21,10 +22,19 @@
         {% if appointment.accountappointment[1] is defined %}
         <td>{{ appointment.accountappointment[1].username }}</td>
         {% else %}
-        <td></td>
+        <td>-</td>
         {% endif %}
 
         <td>{{ appointment.reserved }} </td>
+
+        {% if appointment.reserved == True %}
+        <td>{{ appointment.services[0].service }}</td>        
+        <td>{{ appointment.services[0].price }}</td>
+        {% else %}
+        <td>-</td>
+        <td>-</td>
+        {% endif %}    
+
       </tr>
       {% endfor %}
     </table>  

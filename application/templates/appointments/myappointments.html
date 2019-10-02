@@ -9,17 +9,24 @@
     <table class="table">
         <tr>
           <th>Start time</th>
+          <th>Reserved</th>
           <th>Customer</th>
-          <th></th>
+          <th>Service</th>
+          <th>Price</th>
         </tr>
         {% for reservation in user_reservations %}
         {% if reservation.accountappointment[0].id == current_user.id %}
         <tr>
           <td>{{ reservation.start_time }}</td>
+          <td>{{ reservation.reserved }}</td>
             {% if reservation.accountappointment[1] is defined %}
             <td>{{ reservation.accountappointment[1].username }}</td>
+            <td>{{ reservation.services[0].service }}</td>
+            <td>{{ reservation.services[0].price }}</td>            
             {% else %}
-            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
             {% endif %}
           {% endif %}
         </tr>
@@ -32,7 +39,8 @@
         <tr>
           <th>Start time</th>
           <th>Employee</th>
-          <th></th>
+          <th>Service</th>
+          <th>Price</th>
         </tr>
         {% for reservation in user_reservations %}
         <tr>
@@ -40,6 +48,8 @@
             {% if reservation.accountappointment[1].id == current_user.id %}
           <td>{{ reservation.start_time }}</td>
           <td>{{ reservation.accountappointment[0].username }}</td>
+          <td>{{ reservation.services[0].service }}</td>
+          <td>{{ reservation.services[0].price }}</td>          
             {% endif %}
           {% endif %}
         </tr>

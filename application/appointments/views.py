@@ -3,9 +3,11 @@ from flask_login import current_user
 
 from application import app, db, login_required
 from application.auth.models import User
+from application.services.models import Service
 from application.appointments.models import Appointment
 from application.appointments.forms import AppointmentForm
 from application.appointments.forms import UpdateAppointmentForm
+from application.services.forms import ReserveServiceForm
 from datetime import datetime
 
 # Listing appointments
@@ -80,7 +82,7 @@ def appointments_update():
     userslist = [(i.id, i.name) for i in users]
     form1.users.choices = userslist
 
-    return render_template("appointments/update.html", appointments = Appointment.get_appointments(), form = form1)
+    return render_template("appointments/update.html", appointments = Appointment.query.all(), form = form1)
 
 @app.route("/appointments/update/<appointment_id>/", methods=["GET", "POST"])
 @login_required(role="ADMIN")
@@ -95,11 +97,9 @@ def appointments_updates(appointment_id):
     users = User.query.filter_by(employee = False)
     userslist = [(i.id, i.name) for i in users]
     form.users.choices = userslist
-    employeelist = [(i.id, i.name) for i in employees]
-    form.employees.choices = employeelist  
     
     if not form.validate():
-        return render_template("appointments/update.html", appointments = Appointment.get_appointments(), form = form)
+        return render_template("appointments/update.html", appointments = Appointment.query.all(), form = form)
 
     t = Appointment.query.get(appointment_id)
 
@@ -126,21 +126,40 @@ def appointments_updates(appointment_id):
 @login_required(role="ANY")
 def appointments_reserve():
 
-    return render_template("appointments/reserve.html", appointments = Appointment.get_appointments())
+    form = ReserveServiceForm(request.form)
+
+    services = Service.query.all()
+    serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
+    form.services.choices = serviceslist
+
+    return render_template("appointments/reserve.html", appointments = Appointment.query.filter_by(reserved = False), form = form)
 
 @app.route("/appointments/reserve/<appointment_id>/", methods=["POST"])
 @login_required(role="ANY")
 def appointment_set_reserved(appointment_id):
 
+    form = ReserveServiceForm(request.form)
+
+    services = Service.query.all()
+    serviceslist = [(i.id, i.service) for i in services]
+    form.services.choices = serviceslist    
+
+    if not form.validate():
+        return render_template("appointments/reserve.html", appointments = Appointment.query.filter_by(reserved = False), form = form)  
+
     user = User.query.get(current_user.id)
 
     t = Appointment.query.get(appointment_id)
+
+    service_id = form.services.data
+    new_service = Service.query.get(service_id)
 
     if t.reserved is True:
         t.reserved = False
     elif t.reserved is False:
         t.reserved = True
     
+    t.services.append(new_service)
     t.accountappointment.append(user)        
 
     db.session().commit()

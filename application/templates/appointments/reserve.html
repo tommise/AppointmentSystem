@@ -9,22 +9,23 @@
     <tr>
       <th>Appointment</th>
       <th>Employee</th>
-      <th></th>
+      <th>Service</th>
+      <th>Reserve</th>
     </tr>
     {% for appointment in appointments %}
     <tr>
-
-    {% if appointment.reserved == False %}
-
       <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.employee }}</td>
-      <td>
+      <td>{{ appointment.accountappointment[0].username }}</td>
+      
         <form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
-            <input type="submit" value="Reserve"/>
+            <td>{{ form.services }}</td>
+            <ul>
+                {% for error in form.services.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            <td><input type="submit" value="Reserve"/></td>
         </form>
-    </td>
-
-    {% endif %}
     
     </tr>
     {% endfor %}
