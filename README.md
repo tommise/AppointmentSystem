@@ -1,16 +1,20 @@
 # Appointment System
 
-An online database appointment system for service companies to provide available times for an appointment, assign an employee for it and for customers to select the most convenient time available. A customer will login to the page, provide essential contact information and reserve a free appointment time. The database contains three tables: Appointment, User, Service and many-to-many connection table UserAppointment. Appropriate links to the database ERD, user stories and the app in Heroku hosting are made available below.
+An online database appointment system for service companies to provide available times for an appointment, assign an employee for it and for customers to select the most convenient time available. The database contains three main tables: Appointment, Account, Service and two many-to-many connection tables AccountAppointment and ServiceAppointment. Appropriate links to the database schema, user stories, user- and installation instructions and link to the the app in Heroku are made available below.
 
 ## Links:
 
-<a href="https://tsoha-appointmentsystem-demo.herokuapp.com/">Link to Heroku app</a>
+[Link to Heroku app](https://tsoha-appointmentsystem-demo.herokuapp.com/) 
 
-<a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_entity_relationship_diagram.pdf">Link to entity-relationship diagram (ERD)</a>
+[Link to database schema diagram](https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_schema.pdf) 
 
-<a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_stories.md">Link to user stories</a>
+[Link to user stories](https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_stories.md) 
 
-<a href="https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_structure.md">Link to database structure</a>
+[Link to database structure](https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_structure.md)
+
+[Link to user instructions](https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_instructions.md)
+
+[Link to install instructions](https://github.com/tommise/AppointmentSystem/blob/master/documentation/install_instructions.md) 
 
 ## Login credentials for the app:
 
