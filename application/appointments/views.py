@@ -193,7 +193,12 @@ def appointment_set_cancel(appointment_id):
 
 # Statistics
 
-@app.route('/appointments/statistics/')
+@app.route('/appointments/statistics/users_without_reservation/')
 @login_required(role="ADMIN")
-def admin_statistics():
+def users_without_reservation():
     return render_template("appointments/statistics.html", users_without_reservation = User.get_users_without_reservation())
+
+@app.route('/appointments/statistics/most_popular_services/')
+@login_required(role="ADMIN")
+def most_popular_services():
+    return render_template("appointments/statistics.html", most_popular_services = Appointment.get_most_popular_services())

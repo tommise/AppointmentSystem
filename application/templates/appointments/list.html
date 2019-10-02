@@ -31,10 +31,10 @@
           {% if appointment.services[0] is defined %}
           <td>{{ appointment.services[0].service }}</td>        
           <td>{{ appointment.services[0].price }}</td>
+          {% endif %}   
           {% else %}
           <td>-</td>
-          <td>-</td>
-          {% endif %}    
+          <td>-</td> 
         {% endif %}
 
       </tr>

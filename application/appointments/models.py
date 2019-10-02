@@ -20,4 +20,21 @@ class Appointment(db.Model):
     def __init__(self, start_time):
         self.start_time = start_time
         self.reserved = False
-            
+
+    @staticmethod
+    def get_most_popular_services():
+ 
+        stmt = text("SELECT Service.service, COUNT(Service.id) FROM Service"
+                    " INNER JOIN ServiceAppointment ON ServiceAppointment.service_id = Service.id"
+                    " INNER JOIN Appointment ON ServiceAppointment.appointment_id = Appointment.id"
+                    " WHERE Appointment.reserved = TRUE"
+                    " GROUP BY Service.service, Service.id"
+                    " ORDER BY COUNT(Service.service) DESC;")
+
+        res = db.engine.execute(stmt)
+        
+        response = []
+        for row in res:
+            response.append({"name":row[0], "count":row[1]})
+ 
+        return response
