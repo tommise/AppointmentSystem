@@ -28,12 +28,14 @@
         <td>{{ appointment.reserved }} </td>
 
         {% if appointment.reserved == True %}
-        <td>{{ appointment.services[0].service }}</td>        
-        <td>{{ appointment.services[0].price }}</td>
-        {% else %}
-        <td>-</td>
-        <td>-</td>
-        {% endif %}    
+          {% if appointment.services[0] is defined %}
+          <td>{{ appointment.services[0].service }}</td>        
+          <td>{{ appointment.services[0].price }}</td>
+          {% else %}
+          <td>-</td>
+          <td>-</td>
+          {% endif %}    
+        {% endif %}
 
       </tr>
       {% endfor %}

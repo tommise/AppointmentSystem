@@ -19,14 +19,14 @@
         <tr>
           <td>{{ reservation.start_time }}</td>
           <td>{{ reservation.reserved }}</td>
-            {% if reservation.accountappointment[1] is defined %}
-            <td>{{ reservation.accountappointment[1].username }}</td>
-            <td>{{ reservation.services[0].service }}</td>
-            <td>{{ reservation.services[0].price }}</td>            
+            {% if (reservation.accountappointment[1] is defined) and (reservation.services[0] is defined) %}
+              <td>{{ reservation.accountappointment[1].username }}</td>
+              <td>{{ reservation.services[0].service }}</td>
+              <td>{{ reservation.services[0].price }}</td>       
             {% else %}
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
             {% endif %}
           {% endif %}
         </tr>
@@ -45,11 +45,11 @@
         {% for reservation in user_reservations %}
         <tr>
           {% if reservation.accountappointment[1] is defined %}
-            {% if reservation.accountappointment[1].id == current_user.id %}
-          <td>{{ reservation.start_time }}</td>
-          <td>{{ reservation.accountappointment[0].username }}</td>
-          <td>{{ reservation.services[0].service }}</td>
-          <td>{{ reservation.services[0].price }}</td>          
+            {% if (reservation.accountappointment[1].id == current_user.id) and (reservation.services[0] is defined) %}
+              <td>{{ reservation.start_time }}</td>
+              <td>{{ reservation.accountappointment[0].username }}</td>
+              <td>{{ reservation.services[0].service }}</td>
+              <td>{{ reservation.services[0].price }}</td>        
             {% endif %}
           {% endif %}
         </tr>
