@@ -7,15 +7,15 @@ from datetime import datetime
 from application.auth.models import User
 
 class AppointmentForm(FlaskForm):
-    name = DateTimeLocalField('Time: ', default=datetime.today, format='%Y-%m-%dT%H:%M')
+    name = DateTimeLocalField("Time: ", [validators.DataRequired()], default=datetime.today, format='%Y-%m-%dT%H:%M')
     class Meta:
         csrf = False
 
 class UpdateAppointmentForm(FlaskForm):
-    start_time = DateTimeLocalField('Time: ',default=datetime.today, format='%Y-%m-%dT%H:%M')
-    reserved = BooleanField('Reserved: ')
-    employees = SelectField(coerce=int)
-    users = SelectField(coerce=int)
+    start_time = DateTimeLocalField("Time: ", [validators.DataRequired()], default=datetime.today, format='%Y-%m-%dT%H:%M')
+    reserved = BooleanField("Reserved: ", [validators.Optional()])
+    employees = SelectField([validators.DataRequired()], coerce=int)
+    users = SelectField([validators.DataRequired()], coerce=int)
 
     class Meta:
         csrf = False
