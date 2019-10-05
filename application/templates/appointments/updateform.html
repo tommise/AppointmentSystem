@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+ 
+{% block body %}
+{{ error }}
+ 
+<h3>Update an appointment</h3>
+
+<h5>Instructions:</h5>
+<p> - You can update employee assigned to an unreserved appointment.</p>
+<p> - If you leave or pick "Reserved" as empty (False), the information about customer and service will not be registered.</p>
+
+ 
+  <table class="table table-sm">
+    <tr>
+      <th>Appointment</th>
+      <th>Employee</th>
+      <th>User</th>
+      <th>Service</th>
+      <th>Reserved</th>      
+    </tr>
+    <tr>
+      <td>{{ appointment.start_time }}</td>  
+      <td>{{ appointment.accountappointment[0].name }}</td>
+
+      {% if appointment.accountappointment[1] is defined %}
+      <td>{{ appointment.accountappointment[1].name }}</td>
+      {% else %}
+      <td>-</td>
+      {% endif %}
+
+      {% if appointment.services[0] is defined %}
+      <td>{{ appointment.services[0].service }}</td>
+      {% else %}
+      <td>-</td>
+      {% endif %}
+ 
+      <td>{{ appointment.reserved }} </td>  
+
+        <tr>
+            <th>Update appointment time</th>
+            <th>Update employee</th>
+            <th>Update user</th>
+            <th>Update service</th>
+            <th>Update reserved</th>
+        </tr>
+        <tr>
+            <form method="POST" action="{{ url_for('appointments_updates', appointment_id=appointment.id) }}">          
+              <td>{{ form.start_time }}</td>
+ 
+              <td>{{ form.employees }}</td>
+              <ul>
+                  {% for error in form.employees.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>  
+ 
+              <td>{{ form.users }} </td>
+              <ul>
+                  {% for error in form.users.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+              </ul>  
+
+              <td>{{ form.services }} </td>
+              <ul>
+                  {% for error in form.services.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+              </ul>  
+ 
+              <td>{{ form.reserved }}</td>   
+              
+              <td><input type="submit" value="Update"/></td>  
+                                     
+            </form>      
+                
+              </tr>
+            </table>   
+          
+          <p>Please update appointment of choice by clicking "Update".</p>               
+ 
+{% endblock %}

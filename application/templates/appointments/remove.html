@@ -18,16 +18,21 @@
     {% for appointment in appointments %}
     <tr>
       <td>{{ appointment.start_time }}</td>  
-      <td>{{ appointment.accountappointment[0].username }}</td>
+      <td>{{ appointment.accountappointment[0].name }}</td>
       <td>{{ appointment.reserved }} </td>
-      {% if (appointment.accountappointment[1] is defined) and (appointment.services[0] is defined) %}
-          <td>{{ appointment.accountappointment[1].username }}</td>
-          <td>{{ appointment.services[0].service }}</td>
-          <td>{{ appointment.services[0].price }}</td>  
-          {% else %}
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
+
+      {% if appointment.accountappointment[1] is defined %}
+      <td>{{ appointment.accountappointment[1].name }}</td>
+      {% else %}
+      <td>-</td>
+      {% endif %}
+
+      {% if (appointment.reserved == True) and (appointment.services[0] is defined) %}
+        <td>{{ appointment.services[0].service }}</td>        
+        <td>{{ appointment.services[0].price }}</td> 
+        {% else %}
+        <td>-</td>
+        <td>-</td> 
       {% endif %}
       
       <td> 

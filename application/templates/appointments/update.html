@@ -1,61 +1,48 @@
 {% extends "layout.html" %}
- 
+
 {% block body %}
-{{ error }}
- 
+
 <h3>Update an appointment</h3>
-<p></p>
 <p>Please update appointment of choice by clicking "Update".</p>
-<p>Listing is automatically ordered by appointment time in ascending order. Updated time may not stay in the same line.</p>
-<p></p>
- 
+
   <table class="table table-sm table-hover">
     <tr>
       <th>Appointment</th>
       <th>Employee</th>
-      <th>User</th>
       <th>Reserved</th>
-      <th>Update appointment time</th>
-      <th>Update employee</th>
-      <th>Update user</th>
-      <th>Update reserved</th>      
+      <th>User</th>      
+      <th>Service</th>
+      <th>Price</th>
+      <th>Update</th>
     </tr>
+    
     {% for appointment in appointments %}
     <tr>
       <td>{{ appointment.start_time }}</td>  
-      <td>{{ appointment.accountappointment[0].username }}</td>
- 
+      <td>{{ appointment.accountappointment[0].name }}</td>
+      <td>{{ appointment.reserved }} </td>
+
       {% if appointment.accountappointment[1] is defined %}
-      <td>{{ appointment.accountappointment[1].username }}</td>
+      <td>{{ appointment.accountappointment[1].name }}</td>
       {% else %}
-      <td></td>
+      <td>-</td>
       {% endif %}
- 
-      <td>{{ appointment.reserved }} </td>  
+
+      {% if (appointment.reserved == True) and (appointment.services[0] is defined) %}
+        <td>{{ appointment.services[0].service }}</td>
+        <td>{{ appointment.services[0].price }}</td>        
+        {% else %}
+        <td>-</td>
+        <td>-</td>
+      {% endif %}
       
-            <form method="POST" action="{{ url_for('appointments_updates', appointment_id=appointment.id) }}">          
-              <td>{{ form.start_time }}</td>
- 
-              <td>{{ form.employees }}</td>
-              <ul>
-                  {% for error in form.employees.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-                </ul>  
- 
-              <td>{{ form.users }} </td>
-              <ul>
-                  {% for error in form.users.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>  
- 
-              <td>{{ form.reserved }}</td>   
-              <td><input type="submit" value="Update"/></td>                            
-            </form>      
-                
-              </tr>
-              {% endfor %}
-            </table>        
- 
+      <td> 
+  <form method="POST" action="{{ url_for('appointments_update', appointment_id=appointment.id) }}">
+    <input type="submit" value="Update"/>
+  </form>      
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
 {% endblock %}

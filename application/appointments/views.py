@@ -39,8 +39,16 @@ def appointments_create():
 
     if not form.validate():
         return render_template("appointments/new.html", form = form) 
-       
-    t = Appointment(form.name.data)
+
+    currentYear = int(datetime.now().year)
+    comparedYear = int(form.time.data.strftime('%Y'))
+
+    # If input year is smaller than current year or input year is more than two years ahead
+    if currentYear > comparedYear or currentYear + 1 < comparedYear:
+        form.time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
+        return render_template("appointments/new.html", form = form)
+
+    t = Appointment(form.time.data)
     t.accountappointment.append(user)  
 
     db.session().add(t)
@@ -67,28 +75,18 @@ def appointments_delete(appointment_id):
     return redirect(url_for("appointments_remove")) 
 
 # Updating an appointment    
-
 @app.route("/appointments/update/", methods=["GET"])
 @login_required(role="ADMIN")
-def appointments_update():
+def appointments_updatelist():
+    return render_template("appointments/update.html", appointments = Appointment.query.all())
 
-    form1 = UpdateAppointmentForm()
-
-    employees = User.query.filter_by(employee = True)
-    employeelist = [(i.id, i.name) for i in employees]
-    form1.employees.choices = employeelist
-
-    users = User.query.filter_by(employee = False)
-    userslist = [(i.id, i.name) for i in users]
-    form1.users.choices = userslist
-
-    return render_template("appointments/update.html", appointments = Appointment.query.all(), form = form1)
-
-@app.route("/appointments/update/<appointment_id>/", methods=["GET", "POST"])
+@app.route("/appointments/update/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
-def appointments_updates(appointment_id):
-
-    form = UpdateAppointmentForm(request.form)
+def appointments_update(appointment_id):
+    
+    # Populate the fields with the current appointment data
+    t = Appointment.query.get(appointment_id)
+    form = UpdateAppointmentForm(obj=t)
 
     employees = User.query.filter_by(employee = True)
     employeelist = [(i.id, i.name) for i in employees]
@@ -97,28 +95,67 @@ def appointments_updates(appointment_id):
     users = User.query.filter_by(employee = False)
     userslist = [(i.id, i.name) for i in users]
     form.users.choices = userslist
+
+    services = Service.query.all()
+    serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
+    form.services.choices = serviceslist
+
+    return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+
+@app.route("/appointments/update/commit/<appointment_id>/", methods=["POST"])
+@login_required(role="ADMIN")
+def appointments_updates(appointment_id):
+
+    form = UpdateAppointmentForm(request.form)
+    
+    employees = User.query.filter_by(employee = True)
+    employeelist = [(i.id, i.name) for i in employees]
+    form.employees.choices = employeelist
+
+    users = User.query.filter_by(employee = False)
+    userslist = [(i.id, i.name) for i in users]
+    form.users.choices = userslist
+
+    services = Service.query.all()
+    serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
+    form.services.choices = serviceslist
     
     if not form.validate():
-        return render_template("appointments/update.html", appointments = Appointment.query.all(), form = form)
+        render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+
+    currentYear = int(datetime.now().year)
+    comparedYear = int(form.start_time.data.strftime('%Y'))
+
+    # If input year is smaller than current year or input year is more than two years ahead
+    if currentYear > comparedYear or currentYear + 1 < comparedYear:
+        form.time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
     t = Appointment.query.get(appointment_id)
 
-    user_id = form.users.data
-    employee_id = form.employees.data
+    user = User.query.get(form.users.data)
+    employee = User.query.get(form.employees.data)
+    service = Service.query.get(form.services.data)
 
-    new_user = User.query.get(user_id)
-    new_employee = User.query.get(employee_id)
-
+    t.services.clear()
     t.accountappointment.clear()
-    t.accountappointment.append(new_user)
-    t.accountappointment.append(new_employee)
-
     t.start_time = form.start_time.data
     t.reserved = form.reserved.data
+    t.accountappointment.append(employee)
+
+    # If reserved is set to False, information about user and service is removed
+    if form.reserved.data is False:
+        t.accountappointment.append(employee)        
+
+        db.session().commit()        
+        return redirect(url_for("appointments_updatelist"))
+
+    t.accountappointment.append(user)
+    t.services.append(service)
 
     db.session().commit()
   
-    return redirect(url_for("appointments_update"))
+    return redirect(url_for("appointments_updatelist"))
 
 # Reserving an appointment
 
@@ -153,12 +190,8 @@ def appointment_set_reserved(appointment_id):
 
     service_id = form.services.data
     new_service = Service.query.get(service_id)
-
-    if t.reserved is True:
-        t.reserved = False
-    elif t.reserved is False:
-        t.reserved = True
     
+    t.reserved = True
     t.services.append(new_service)
     t.accountappointment.append(user)        
 
@@ -184,6 +217,7 @@ def appointment_set_cancel(appointment_id):
     
     t.reserved = False
     t.accountappointment.clear()
+    t.services.clear()
 
     t.accountappointment.append(employee)
 
