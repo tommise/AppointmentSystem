@@ -52,14 +52,14 @@ def appointments_create():
     def appointmentIsUnique():
         appointmentTimes = Appointment.query.filter_by(start_time = form.time.data)
 
-        for employee in appointmentTimes:
-            if employee.accountappointment[0].id == current_user.id:
+        for appointment in appointmentTimes:
+            if appointment.accountappointment[0].id == current_user.id:
                 return False
 
         return True 
 
     if not appointmentIsUnique():
-        form.time.errors.append("You have already created an appointment time at this timeslot, please choose another time.")
+        form.time.errors.append("You have already an appointment at this starting time, please choose another time.")
         return render_template("appointments/new.html", form = form)
 
     t = Appointment(form.time.data)
@@ -89,6 +89,7 @@ def appointments_delete(appointment_id):
     return redirect(url_for("appointments_remove")) 
 
 # Updating an appointment    
+
 @app.route("/appointments/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_updatelist():
@@ -144,24 +145,24 @@ def appointments_updates(appointment_id):
     if currentYear > comparedYear or currentYear + 1 < comparedYear:
         form.start_time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
-    
-    # Checking if chosen employee already has an appointment at this starting time
+
+    t = Appointment.query.get(appointment_id)
+
+    # Checking if chosen employee already has an appointment at this starting time (excluding the appointment that is being updated)
     def appointmentIsUnique():
         appointmentTimes = Appointment.query.filter_by(start_time = form.start_time.data)
 
-        for employee in appointmentTimes:
-            if employee.accountappointment[0].id == form.employees.data:
+        for appointment in appointmentTimes:
+            if appointment is not t and appointment.accountappointment[0].id == form.employees.data:
                 return False
 
         return True 
 
     if not appointmentIsUnique():
-        form.start_time.errors.append("You have already created an appointment time at this starting time, please choose another time.")
+        form.start_time.errors.append("Chosen employee already has an appointment time at this starting time, please choose another time.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
-    # Creating the updated appointment
-    t = Appointment.query.get(appointment_id)
-
+    # Updating the appointment
     user = User.query.get(form.users.data)
     employee = User.query.get(form.employees.data)
     service = Service.query.get(form.services.data)
