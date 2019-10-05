@@ -15,12 +15,12 @@ from datetime import datetime
 @app.route("/appointments/", methods=["GET"])
 @login_required(role="ANY")
 def appointments_index():
-    return render_template("appointments/list.html", appointments = Appointment.query.all())
+    return render_template("appointments/list.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/myappointments", methods=["GET"])
 @login_required(role="ANY")
 def my_appointments():
-    return render_template("appointments/myappointments.html", user_reservations = Appointment.query.all())  
+    return render_template("appointments/myappointments.html", user_reservations = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 # Creating an appointment
 
@@ -75,7 +75,7 @@ def appointments_create():
 @app.route("/appointments/remove/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_remove():
-    return render_template("appointments/remove.html", appointments = Appointment.query.all())
+    return render_template("appointments/remove.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/remove/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
@@ -93,7 +93,7 @@ def appointments_delete(appointment_id):
 @app.route("/appointments/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_updatelist():
-    return render_template("appointments/update.html", appointments = Appointment.query.all())
+    return render_template("appointments/update.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/update/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
@@ -199,7 +199,10 @@ def appointments_reserve():
     serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
     form.services.choices = serviceslist
 
-    return render_template("appointments/reserve.html", appointments = Appointment.query.filter_by(reserved = False), form = form)
+    return render_template("appointments/reserve.html", 
+        appointments = Appointment.query.filter_by(reserved = False).order_by(Appointment.start_time.asc()).all(), form = form)
+
+    #Taxi.query.filter_by(area='Abuja').order_by(Taxi.count).all()
 
 @app.route("/appointments/reserve/<appointment_id>/", methods=["POST"])
 @login_required(role="ANY")
@@ -212,7 +215,8 @@ def appointment_set_reserved(appointment_id):
     form.services.choices = serviceslist    
 
     if not form.validate():
-        return render_template("appointments/reserve.html", appointments = Appointment.query.filter_by(reserved = False), form = form)  
+        return render_template("appointments/reserve.html", 
+        appointments = Appointment.query.filter_by(reserved = False).order_by(Appointment.start_time.asc()).all(), form = form) 
 
     t = Appointment.query.get(appointment_id)
     employee = t.accountappointment[0]
@@ -238,7 +242,7 @@ def appointment_set_reserved(appointment_id):
 @login_required(role="ANY")
 def appointments_cancel():
 
-    return render_template("appointments/cancel.html", appointments = Appointment.query.all())
+    return render_template("appointments/cancel.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/cancel/<appointment_id>/", methods=["POST"])
 @login_required(role="ANY")
