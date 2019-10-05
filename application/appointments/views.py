@@ -157,7 +157,7 @@ def appointments_updates(appointment_id):
 
     if not appointmentIsUnique():
         form.start_time.errors.append("You have already created an appointment time at this starting time, please choose another time.")
-        return render_template("appointments/new.html", form = form)
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
     # Creating the updated appointment
     t = Appointment.query.get(appointment_id)
