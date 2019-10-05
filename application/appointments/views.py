@@ -33,7 +33,7 @@ def appointments_form():
 @login_required(role="ADMIN")
 def appointments_create():
 
-    user = User.query.get(current_user.id)
+    employee = User.query.get(current_user.id)
 
     form = AppointmentForm(request.form)
 
@@ -43,13 +43,27 @@ def appointments_create():
     currentYear = int(datetime.now().year)
     comparedYear = int(form.time.data.strftime('%Y'))
 
-    # If input year is smaller than current year or input year is more than two years ahead
+    # Checking if input year is smaller than current year or input year is more than two years ahead
     if currentYear > comparedYear or currentYear + 1 < comparedYear:
         form.time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
         return render_template("appointments/new.html", form = form)
 
+    # Checking if employee has already created an appointment time at this starting time
+    def appointmentIsUnique():
+        appointmentTimes = Appointment.query.filter_by(start_time = form.time.data)
+
+        for employee in appointmentTimes:
+            if employee.accountappointment[0].id == current_user.id:
+                return False
+
+        return True 
+
+    if not appointmentIsUnique():
+        form.time.errors.append("You have already created an appointment time at this timeslot, please choose another time.")
+        return render_template("appointments/new.html", form = form)
+
     t = Appointment(form.time.data)
-    t.accountappointment.append(user)  
+    t.accountappointment.append(employee)  
 
     db.session().add(t)
     db.session().commit()
@@ -126,11 +140,26 @@ def appointments_updates(appointment_id):
     currentYear = int(datetime.now().year)
     comparedYear = int(form.start_time.data.strftime('%Y'))
 
-    # If input year is smaller than current year or input year is more than two years ahead
+    # Checking if input year is smaller than current year or input year is more than two years ahead
     if currentYear > comparedYear or currentYear + 1 < comparedYear:
-        form.time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
+        form.start_time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+    
+    # Checking if chosen employee already has an appointment at this starting time
+    def appointmentIsUnique():
+        appointmentTimes = Appointment.query.filter_by(start_time = form.time.data)
 
+        for employee in appointmentTimes:
+            if employee.accountappointment[0].id == form.employees.data:
+                return False
+
+        return True 
+
+    if not appointmentIsUnique():
+        form.start_time.errors.append("You have already created an appointment time at this timeslot, please choose another time.")
+        return render_template("appointments/new.html", form = form)
+
+    # Creating the updated appointment
     t = Appointment.query.get(appointment_id)
 
     user = User.query.get(form.users.data)
@@ -141,15 +170,15 @@ def appointments_updates(appointment_id):
     t.accountappointment.clear()
     t.start_time = form.start_time.data
     t.reserved = form.reserved.data
-    t.accountappointment.append(employee)
 
-    # If reserved is set to False, information about user and service is removed
+    # If reserved is set to False, information about user and service are disregarded
     if form.reserved.data is False:
         t.accountappointment.append(employee)        
 
         db.session().commit()        
         return redirect(url_for("appointments_updatelist"))
-
+    
+    t.accountappointment.append(employee)
     t.accountappointment.append(user)
     t.services.append(service)
 
@@ -184,16 +213,19 @@ def appointment_set_reserved(appointment_id):
     if not form.validate():
         return render_template("appointments/reserve.html", appointments = Appointment.query.filter_by(reserved = False), form = form)  
 
-    user = User.query.get(current_user.id)
-
     t = Appointment.query.get(appointment_id)
+    employee = t.accountappointment[0]
+    t.accountappointment.clear()
+
+    new_user = User.query.get(current_user.id)
 
     service_id = form.services.data
     new_service = Service.query.get(service_id)
     
     t.reserved = True
     t.services.append(new_service)
-    t.accountappointment.append(user)        
+    t.accountappointment.append(employee) 
+    t.accountappointment.append(new_user)        
 
     db.session().commit()
   

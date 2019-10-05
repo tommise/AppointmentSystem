@@ -46,6 +46,11 @@
         <tr>
             <form method="POST" action="{{ url_for('appointments_updates', appointment_id=appointment.id) }}">          
               <td>{{ form.start_time }}</td>
+              <ul>
+                  {% for error in form.start_time.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul> 
  
               <td>{{ form.employees }}</td>
               <ul>
