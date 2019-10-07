@@ -169,12 +169,14 @@ def appointments_updates(appointment_id):
 
     t.services.clear()
     t.accountappointment.clear()
+    db.session().commit()
+
     t.start_time = form.start_time.data
-    t.reserved = form.reserved.data
 
     # If reserved is set to False, information about user and service are disregarded
     if form.reserved.data is False:
         t.accountappointment.append(employee)        
+        t.reserved = form.reserved.data
 
         db.session().commit()        
         return redirect(url_for("appointments_updatelist"))
@@ -182,6 +184,7 @@ def appointments_updates(appointment_id):
     t.accountappointment.append(employee)
     t.accountappointment.append(user)
     t.services.append(service)
+    t.reserved = form.reserved.data
 
     db.session().commit()
   
@@ -201,8 +204,6 @@ def appointments_reserve():
 
     return render_template("appointments/reserve.html", 
         appointments = Appointment.query.filter_by(reserved = False).order_by(Appointment.start_time.asc()).all(), form = form)
-
-    #Taxi.query.filter_by(area='Abuja').order_by(Taxi.count).all()
 
 @app.route("/appointments/reserve/<appointment_id>/", methods=["POST"])
 @login_required(role="ANY")
