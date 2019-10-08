@@ -99,20 +99,42 @@ def appointments_updatelist():
 @login_required(role="ADMIN")
 def appointments_update(appointment_id):
     
-    # Populate the fields with the current appointment data
     t = Appointment.query.get(appointment_id)
+    # Populating the form fields with current information
+
     form = UpdateAppointmentForm(obj=t)
 
     employees = User.query.filter_by(employee = True)
-    employeelist = [(i.id, i.name) for i in employees]
+    currentemployee = t.accountappointment[0]
+    employeelist = [(currentemployee.id, currentemployee.name)]
+    for i in employees:
+        if i.id != currentemployee.id:
+            employeelist.append([i.id, i.name])
     form.employees.choices = employeelist
 
-    users = User.query.filter_by(employee = False)
-    userslist = [(i.id, i.name) for i in users]
-    form.users.choices = userslist
-
+    customers = User.query.filter_by(employee = False)
     services = Service.query.all()
-    serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
+
+    # If the appointment is reserved, populate customer and service information
+    if t.reserved is True:
+        currentcustomer = t.accountappointment[1]
+        customerlist = [(currentcustomer.id, currentcustomer.name)]
+
+        for i in customers:
+            if i.id != currentcustomer.id:
+                customerlist.append([i.id, i.name])
+
+        currentservice = t.services[0]
+        serviceslist = [(currentservice.id, "".join(currentservice.service + ', ' + str(currentservice.price) + 'e'))]
+
+        for i in services:
+            if i.id != currentservice.id:
+                serviceslist.append([i.id, "".join(i.service + ', ' + str(i.price) + 'e')])
+    else:
+        customerlist = [(i.id, i.name) for i in customers]
+        serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
+
+    form.users.choices = customerlist
     form.services.choices = serviceslist
 
     return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
@@ -130,7 +152,7 @@ def appointments_updates(appointment_id):
     users = User.query.filter_by(employee = False)
     userslist = [(i.id, i.name) for i in users]
     form.users.choices = userslist
-
+    
     services = Service.query.all()
     serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
     form.services.choices = serviceslist
@@ -222,6 +244,7 @@ def appointment_set_reserved(appointment_id):
     t = Appointment.query.get(appointment_id)
     employee = t.accountappointment[0]
     t.accountappointment.clear()
+    db.session().commit()    
 
     new_user = User.query.get(current_user.id)
 
@@ -256,6 +279,7 @@ def appointment_set_cancel(appointment_id):
     t.reserved = False
     t.accountappointment.clear()
     t.services.clear()
+    db.session().commit()
 
     t.accountappointment.append(employee)
 
