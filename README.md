@@ -8,7 +8,7 @@ An online database appointment system for service companies to provide available
 
 [Link to database schema diagram](https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_schema.pdf) 
 
-[Link to user stories](https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_stories.md) 
+[Link to user stories and SQL statements](https://github.com/tommise/AppointmentSystem/blob/master/documentation/user_stories.md) 
 
 [Link to database structure](https://github.com/tommise/AppointmentSystem/blob/master/documentation/db_structure.md)
 
