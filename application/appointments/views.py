@@ -165,12 +165,18 @@ def appointments_updates(appointment_id):
     if not form.validate():
         render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
+    # If there are no services created and the employee is trying to update an appointment
+    if len(serviceslist) < 1:
+        form.services.errors.append("There are no services available. Please create a service.")
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)        
+
+    # Only employee assigned to the appointment can update the appointment 
+    if not t.accountappointment[0].id == current_user.id:
+        form.employees.errors.append("You cannot update an appointment that you are not assigned to.")
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+    
     currentYear = int(datetime.now().year)
     comparedYear = int(form.start_time.data.strftime('%Y'))
-
-    if not t.accountappointment[0].id == current_user.id:
-        form.start_time.errors.append("You cannot update an appointment that you are not assigned to.")
-        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
     # Checking if input year is smaller than current year or input year is more than two years ahead
     if currentYear > comparedYear or currentYear + 1 < comparedYear:
@@ -188,7 +194,7 @@ def appointments_updates(appointment_id):
         return True 
 
     if not appointmentIsUnique():
-        form.start_time.errors.append("Chosen employee already has an appointment time at this starting time, please choose another time.")
+        form.employees.errors.append("Chosen employee already has an appointment time at this starting time, please choose another time.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
     # Updating the appointment
