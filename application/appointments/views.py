@@ -115,7 +115,7 @@ def appointments_update(appointment_id):
     customers = User.query.filter_by(employee = False)
     services = Service.query.all()
 
-    # If the appointment is reserved, populate customer and service information
+    # If the appointment is reserved, populate first with current customer
     if t.reserved is True:
         currentcustomer = t.accountappointment[1]
         customerlist = [(currentcustomer.id, currentcustomer.name)]
@@ -124,15 +124,19 @@ def appointments_update(appointment_id):
             if i.id != currentcustomer.id:
                 customerlist.append([i.id, i.name])
 
-        currentservice = t.services[0]
+    else:
+        customerlist = [(i.id, i.name) for i in customers]
+
+    # If there is a service connected to the appointment, populate
+    if len(t.services) > 0:
+        currentservice = t.services[0]        
         serviceslist = [(currentservice.id, "".join(currentservice.service + ', ' + str(currentservice.price) + 'e'))]
 
         for i in services:
             if i.id != currentservice.id:
                 serviceslist.append([i.id, "".join(i.service + ', ' + str(i.price) + 'e')])
     else:
-        customerlist = [(i.id, i.name) for i in customers]
-        serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]
+        serviceslist = [(i.id, "".join(i.service + ', ' + str(i.price) + 'e')) for i in services]        
 
     form.users.choices = customerlist
     form.services.choices = serviceslist
