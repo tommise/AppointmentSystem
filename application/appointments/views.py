@@ -142,7 +142,8 @@ def appointments_update(appointment_id):
 @app.route("/appointments/update/commit/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
 def appointments_updates(appointment_id):
-
+    
+    t = Appointment.query.get(appointment_id)
     form = UpdateAppointmentForm(request.form)
     
     employees = User.query.filter_by(employee = True)
@@ -163,12 +164,14 @@ def appointments_updates(appointment_id):
     currentYear = int(datetime.now().year)
     comparedYear = int(form.start_time.data.strftime('%Y'))
 
+    if not t.accountappointment[0].id == current_user.id:
+        form.start_time.errors.append("You cannot update an appointment that you are not assigned to.")
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+
     # Checking if input year is smaller than current year or input year is more than two years ahead
     if currentYear > comparedYear or currentYear + 1 < comparedYear:
         form.start_time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
-
-    t = Appointment.query.get(appointment_id)
 
     # Checking if chosen employee already has an appointment at this starting time (excluding the appointment that is being updated)
     def appointmentIsUnique():
