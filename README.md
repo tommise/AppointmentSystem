@@ -1,6 +1,6 @@
 # Appointment System
 
-An online database appointment system for service companies to provide available times for an appointment, assign an employee for it and for customers to select the most convenient time available. The database contains three main tables: Appointment, Account, Service and two many-to-many connection tables AccountAppointment and ServiceAppointment. Appropriate links to the database schema, user stories, user- and installation instructions and link to the the app in Heroku are made available below.
+A generic online database appointment system for service companies to provide available times for an appointment and for customers to select the most convenient time available. The database contains three main tables: Appointment, Account, Service and two many-to-many connection tables AccountAppointment and ServiceAppointment. Appropriate links to the database schema, user stories, user- and installation instructions and link to the the app in Heroku are made available below.
 
 ## Links:
 
@@ -20,5 +20,7 @@ An online database appointment system for service companies to provide available
 
 Role | Username | Password
 ------------ | ------------ | -------------
-Employee | admin-test | test
-User | user-test | test
+Employee | employee1 | test
+Employee | employee2 | test
+User | user1 | test
+User | user2 | test
