@@ -28,15 +28,15 @@ def services_create():
     if not form.validate():
         return render_template("services/new.html", form = form)
 
-    serviceExists = Service.query.filter_by(service = form.service.data).first()
+    service_exists = Service.query.filter_by(service = form.service.data).first()
 
-    if serviceExists:
+    if service_exists:
         form.service.errors.append("This service name is already in use. Please choose another service name.")
         return render_template("services/new.html", form = form)
 
-    t = Service(form.service.data, form.price.data)
+    new_service = Service(form.service.data, form.price.data)
   
-    db.session().add(t)
+    db.session().add(new_service)
     db.session().commit()
   
     return redirect(url_for("services_list"))   
@@ -52,9 +52,8 @@ def services_remove():
 @login_required(role="ADMIN")
 def services_delete(service_id):
 
-    t = Service.query.get(service_id)
-
-    db.session().delete(t)
+    service = Service.query.get(service_id)
+    db.session().delete(service)
     db.session().commit()
 
     return redirect(url_for("services_remove")) 
@@ -75,10 +74,9 @@ def services_updates(service_id):
     if not form.validate():
         return render_template("services/update.html", services = Service.query.all(), form = form)
 
-    t = Service.query.get(service_id)
-
-    t.service = form.service.data
-    t.price = form.price.data
+    update_service = Service.query.get(service_id)
+    update_service.service = form.service.data
+    update_service.price = form.price.data
 
     db.session().commit()
   

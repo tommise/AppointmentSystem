@@ -31,14 +31,17 @@ def auth_logout():
 @app.route("/auth/signup", methods = ["GET", "POST"])
 def signup_new():
 
+    if request.method == "GET":
+        return render_template("auth/signupform.html", form = SignUpForm())
+
     form = SignUpForm(request.form)
     
     if not form.validate():
         return render_template("auth/signupform.html", form = form)
 
-    userExists = User.query.filter_by(username = form.username.data).first()
+    user_exists = User.query.filter_by(username = form.username.data).first()
 
-    if userExists:
+    if user_exists:
         form.username.errors.append("This username is already in use. Please choose another username.")
         return render_template("auth/signupform.html", form = form)
 
@@ -46,8 +49,8 @@ def signup_new():
     username = form.username.data
     password = form.password.data
 
-    t = User(name, username, password, 0)
-    db.session.add(t)
+    new_user = User(name, username, password, 0)
+    db.session.add(new_user)
     db.session.commit()
 
     return redirect(url_for("auth_login"))
