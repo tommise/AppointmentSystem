@@ -65,7 +65,6 @@ from application.appointments import models
 from application.appointments import views
 from application.auth import models
 from application.auth import views
-from application.signup import views
 from application.services import views
 
 @login_manager.user_loader
