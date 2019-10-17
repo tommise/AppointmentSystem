@@ -12,20 +12,29 @@ from datetime import datetime
 # Listing appointments
 
 @app.route("/appointments/", methods=["GET"])
-@login_required(role="ANY")
+@login_required(role="ADMIN")
 def appointments_index():
     return render_template("appointments/list.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/myappointments", methods=["GET"])
 @login_required(role="ANY")
 def my_appointments():
-    return render_template("appointments/myappointments.html", user_reservations = Appointment.query.order_by(Appointment.start_time.asc()).all())
+    
+        return render_template("appointments/myappointments.html",
+        user_reservations = Appointment.query.join(User.appointments).filter(User.id == current_user.id).order_by(Appointment.start_time.asc()).all())
+
+    #return render_template("appointments/myappointments.html", user_reservations = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 # Creating an appointment
 
-@app.route("/appointments/new/")
+@app.route("/appointments/new/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_form():
+    
+    # If an user is trying to access the site through URL
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("appointments/new.html", form = AppointmentForm())
 
 @app.route("/appointments/", methods=["POST"])
@@ -231,6 +240,10 @@ def appointments_updates(appointment_id):
 @app.route("/appointments/reserve/", methods=["GET"])
 @login_required(role="ANY")
 def appointments_reserve():
+    
+    # If an employee is trying to access the reserve site through URL
+    if current_user.employee is True:
+        return redirect(url_for("appointments_index"))
 
     form = ReserveServiceForm(request.form)
 

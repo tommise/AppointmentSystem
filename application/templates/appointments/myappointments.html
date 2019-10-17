@@ -4,21 +4,19 @@
 
     <h3>Listing my appointments</h3>
 
-    {% if current_user.is_authenticated and current_user.get_role() == 'ADMIN' %}
-
     <table class="table">
         <tr>
           <th>Start time</th>
-          <th>Reserved</th>
-          <th>Customer</th>
+          <th>Employee</th>
+          <th>User</th>
           <th>Service</th>
           <th>Price</th>
+          <th>Reserved</th>
         </tr>
         {% for reservation in user_reservations %}
-        {% if reservation.accountappointment[0].id == current_user.id %}
         <tr>
           <td>{{ reservation.start_time }}</td>
-          <td>{{ reservation.reserved }}</td>
+          <td>{{ reservation.accountappointment[0].username}}</td>
             {% if reservation.accountappointment[1] is defined %}
               <td>{{ reservation.accountappointment[1].username }}</td>
             {% else %}
@@ -31,39 +29,9 @@
               <td>-</td>
               <td>-</td>
             {% endif %}
-          {% endif %}
+            <td>{{ reservation.reserved }}</td>
         </tr>
         {% endfor %}
     </table>
-
-    {% elif current_user.is_authenticated and current_user.get_role() == 'USER' %} 
-
-    <table class="table">
-        <tr>
-          <th>Start time</th>
-          <th>Employee</th>
-          <th>Service</th>
-          <th>Price</th>
-        </tr>
-        {% for reservation in user_reservations %}
-        <tr>
-            {% if (reservation.accountappointment[1] is defined) and (reservation.accountappointment[1].id == current_user.id) %}
-              <td>{{ reservation.start_time }}</td>
-              <td>{{ reservation.accountappointment[0].username }}</td>
-
-            {% if reservation.services[0] is defined %}
-              <td>{{ reservation.services[0].service }}</td>
-              <td>{{ reservation.services[0].price }}</td>  
-            {% else %}     
-              <td>-</td>
-              <td>-</td>
-            {% endif %}      
-
-          {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
-
-    {% endif %} 
 
 {% endblock %}
