@@ -240,9 +240,9 @@ def appointments_updates(appointment_id):
     current_month = int(datetime.now().month)
     current_day = int(datetime.now().day)
 
-    given_year = int(form.time.data.strftime('%Y'))
-    given_month = int(form.time.data.strftime('%m'))
-    given_date = int(form.time.data.strftime('%d'))
+    given_year = int(form.start_time.data.strftime('%Y'))
+    given_month = int(form.start_time.data.strftime('%m'))
+    given_date = int(form.start_time.data.strftime('%d'))
 
     # Checking if given time is in the past or way too ahead in the future (current_year + 1 year)
     if current_year > given_year or current_year + 1 < given_year:
