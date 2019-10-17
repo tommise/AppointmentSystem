@@ -17,7 +17,6 @@
 
     {% for reservation in appointments %}
     <tr>
-      {% if (reservation.accountappointment[1] is defined) and (reservation.accountappointment[1].id == current_user.id) %}
       <td>{{ reservation.start_time }}</td>
       <td>{{ reservation.accountappointment[0].username }}</td>
 
@@ -34,7 +33,6 @@
             <input type="submit" value="Cancel"/>
         </form>
     </td>
-    {% endif %}
     </tr>
     {% endfor %}
   </table>

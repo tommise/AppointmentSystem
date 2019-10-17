@@ -8,8 +8,13 @@ from application.services.forms import ServiceForm
 # Listing services
 
 @app.route("/services/", methods=["GET"])
-@login_required(role="ANY")
+@login_required(role="ADMIN")
 def services_list():
+    
+    # If user is trying to access this section through URL, redirect user straight to my_appointments
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("services/list.html", services = Service.query.all())
 
 # Creating a new service
@@ -17,11 +22,18 @@ def services_list():
 @app.route("/services/new/")
 @login_required(role="ADMIN")
 def services_form():
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("services/new.html", form = ServiceForm())  
 
 @app.route("/services/", methods=["POST"])
 @login_required(role="ADMIN")
 def services_create():
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
 
     form = ServiceForm(request.form)
 
@@ -46,11 +58,18 @@ def services_create():
 @app.route("/service/remove/", methods=["GET"])
 @login_required(role="ADMIN")
 def services_remove():
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("services/remove.html", services = Service.query.all())
 
 @app.route("/services/remove/<service_id>/", methods=["POST"])
 @login_required(role="ADMIN")
 def services_delete(service_id):
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
 
     service = Service.query.get(service_id)
     db.session().delete(service)
@@ -63,11 +82,18 @@ def services_delete(service_id):
 @app.route("/services/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def services_update():
+    
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("services/update.html", services = Service.query.all(), form = ServiceForm())
 
 @app.route("/services/update/<service_id>/", methods=["GET", "POST"])
 @login_required(role="ADMIN")
 def services_updates(service_id):
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
 
     form = ServiceForm(request.form) 
 

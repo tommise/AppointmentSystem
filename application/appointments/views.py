@@ -14,16 +14,22 @@ from datetime import datetime
 @app.route("/appointments/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_index():
-    return render_template("appointments/list.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
+    
+    # If user is trying to access this section through URL, redirect user straight to my_appointments
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
+    return render_template("appointments/list.html", 
+        appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/myappointments", methods=["GET"])
 @login_required(role="ANY")
 def my_appointments():
     
-        return render_template("appointments/myappointments.html",
-        user_reservations = Appointment.query.join(User.appointments).filter(User.id == current_user.id).order_by(Appointment.start_time.asc()).all())
-
-    #return render_template("appointments/myappointments.html", user_reservations = Appointment.query.order_by(Appointment.start_time.asc()).all())
+    return render_template("appointments/myappointments.html",
+        appointments = Appointment.query.join(User.appointments)
+        .filter(User.id == current_user.id)
+        .order_by(Appointment.start_time.asc()).all())
 
 # Creating an appointment
 
@@ -31,7 +37,6 @@ def my_appointments():
 @login_required(role="ADMIN")
 def appointments_form():
     
-    # If an user is trying to access the site through URL
     if current_user.employee is not True:
         return redirect(url_for("my_appointments"))
 
@@ -41,6 +46,9 @@ def appointments_form():
 @login_required(role="ADMIN")
 def appointments_create():
 
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     employee = User.query.get(current_user.id)
 
     form = AppointmentForm(request.form)
@@ -48,13 +56,26 @@ def appointments_create():
     if not form.validate():
         return render_template("appointments/new.html", form = form) 
 
-    currentYear = int(datetime.now().year)
-    comparedYear = int(form.time.data.strftime('%Y'))
+    current_year = int(datetime.now().year)
+    current_month = int(datetime.now().month)
+    current_day = int(datetime.now().day)
 
-    # Checking if input year is smaller than current year or input year is more than two years ahead
-    if currentYear > comparedYear or currentYear + 1 < comparedYear:
-        form.time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
+    given_year = int(form.time.data.strftime('%Y'))
+    given_month = int(form.time.data.strftime('%m'))
+    given_date = int(form.time.data.strftime('%d'))
+
+    # Checking if given time is in the past or way too ahead in the future (current_year + 1 year)
+    if current_year > given_year or current_year + 1 < given_year:
+        form.time.errors.append("The year you picked is in the past.")
         return render_template("appointments/new.html", form = form)
+
+    elif current_month > given_month and current_year == given_year:
+        form.time.errors.append("The month you picked is in the past.")
+        return render_template("appointments/new.html", form = form)
+
+    elif current_month == given_month and current_day > given_date and current_year == given_year:
+        form.time.errors.append("The day you picked is in the past.")
+        return render_template("appointments/new.html", form = form)        
 
     # Checking if employee has already created an appointment time at this starting time
     def appointment_is_unique():
@@ -83,11 +104,21 @@ def appointments_create():
 @app.route("/appointments/remove/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_remove():
-    return render_template("appointments/remove.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
+    return render_template("appointments/remove.html",
+        appointments = Appointment.query.join(User.appointments)
+        .filter(User.id == current_user.id)
+        .order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/remove/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
 def appointments_delete(appointment_id):
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
 
     appointment = Appointment.query.get(appointment_id)
 
@@ -101,13 +132,26 @@ def appointments_delete(appointment_id):
 @app.route("/appointments/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def appointments_updatelist():
-    return render_template("appointments/update.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
+    
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
+    return render_template("appointments/update.html",
+        appointments = Appointment.query.join(User.appointments)
+        .filter(User.id == current_user.id)
+        .order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/update/<appointment_id>/", methods=["POST"])
 @login_required(role="ADMIN")
 def appointments_update(appointment_id):
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
     
     update_appointment = Appointment.query.get(appointment_id)
+
+    if current_user.id != update_appointment.accountappointment[0].id:
+        return redirect(url_for("appointments_index"))
     
     # Populating the form fields with current information
     form = UpdateAppointmentForm(obj = update_appointment)
@@ -157,7 +201,14 @@ def appointments_update(appointment_id):
 @login_required(role="ADMIN")
 def appointments_updates(appointment_id):
     
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     update_appointment = Appointment.query.get(appointment_id)
+
+    if current_user.id != update_appointment.accountappointment[0].id:
+        return redirect(url_for("appointments_index"))
+
     form = UpdateAppointmentForm(request.form)
     
     employees = User.query.filter_by(employee = True)
@@ -185,12 +236,25 @@ def appointments_updates(appointment_id):
         form.employees.errors.append("You cannot update an appointment that you are not assigned to.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
     
-    currentYear = int(datetime.now().year)
-    comparedYear = int(form.start_time.data.strftime('%Y'))
+    current_year = int(datetime.now().year)
+    current_month = int(datetime.now().month)
+    current_day = int(datetime.now().day)
 
-    # Checking if input year is smaller than current year or input year is more than two years ahead
-    if currentYear > comparedYear or currentYear + 1 < comparedYear:
-        form.start_time.errors.append("The time you picked is in the past or way too ahead in future, please choose another time.")
+    given_year = int(form.time.data.strftime('%Y'))
+    given_month = int(form.time.data.strftime('%m'))
+    given_date = int(form.time.data.strftime('%d'))
+
+    # Checking if given time is in the past or way too ahead in the future (current_year + 1 year)
+    if current_year > given_year or current_year + 1 < given_year:
+        form.time.errors.append("The year you picked is in the past.")
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+
+    elif current_month > given_month and current_year == given_year:
+        form.time.errors.append("The month you picked is in the past.")
+        return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
+
+    elif current_month == given_month and current_day > given_date and current_year == given_year:
+        form.time.errors.append("The day you picked is in the past.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
     # Checking if chosen employee already has an appointment at this starting time (excluding the appointment that is being updated)
@@ -238,10 +302,10 @@ def appointments_updates(appointment_id):
 # Reserving an appointment
 
 @app.route("/appointments/reserve/", methods=["GET"])
-@login_required(role="ANY")
+@login_required(role="USER")
 def appointments_reserve():
     
-    # If an employee is trying to access the reserve site through URL
+    # If an employee is trying to access the reserve site through URL, redirect employee to appointment_index
     if current_user.employee is True:
         return redirect(url_for("appointments_index"))
 
@@ -255,8 +319,11 @@ def appointments_reserve():
         appointments = Appointment.query.filter_by(reserved = False).order_by(Appointment.start_time.asc()).all(), form = form)
 
 @app.route("/appointments/reserve/<appointment_id>/", methods=["POST"])
-@login_required(role="ANY")
+@login_required(role="USER")
 def appointment_set_reserved(appointment_id):
+
+    if current_user.employee is True:
+        return redirect(url_for("appointments_index"))
 
     form = ReserveServiceForm(request.form)
 
@@ -270,8 +337,10 @@ def appointment_set_reserved(appointment_id):
 
     appointment = Appointment.query.get(appointment_id)
     employee = appointment.accountappointment[0]
+
     appointment.accountappointment.clear()
-    db.session().commit()    
+    appointment.services.clear()
+    db.session().commit()
 
     new_user = User.query.get(current_user.id)
 
@@ -280,8 +349,8 @@ def appointment_set_reserved(appointment_id):
     
     appointment.reserved = True
     appointment.services.append(new_service)
-    appointment.accountappointment.append(employee) 
-    appointment.accountappointment.append(new_user)        
+    appointment.accountappointment.append(employee)
+    appointment.accountappointment.append(new_user)         
 
     db.session().commit()
   
@@ -290,14 +359,25 @@ def appointment_set_reserved(appointment_id):
 # Cancelling an appointment
 
 @app.route("/appointments/cancel/", methods=["GET"])
-@login_required(role="ANY")
+@login_required(role="USER")
 def appointments_cancel():
 
-    return render_template("appointments/cancel.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
+    if current_user.employee is True:
+        return redirect(url_for("appointments_index"))
+
+    return render_template("appointments/cancel.html",
+        appointments = Appointment.query.join(User.appointments)
+        .filter(User.id == current_user.id)
+        .order_by(Appointment.start_time.asc()).all())
+
+    #return render_template("appointments/cancel.html", appointments = Appointment.query.order_by(Appointment.start_time.asc()).all())
 
 @app.route("/appointments/cancel/<appointment_id>/", methods=["POST"])
-@login_required(role="ANY")
+@login_required(role="USER")
 def appointment_set_cancel(appointment_id):
+
+    if current_user.employee is True:
+        return redirect(url_for("appointments_index"))
 
     appointment = Appointment.query.get(appointment_id)
 
@@ -319,9 +399,17 @@ def appointment_set_cancel(appointment_id):
 @app.route('/appointments/statistics/users_without_reservation/')
 @login_required(role="ADMIN")
 def users_without_reservation():
+    
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("appointments/statistics.html", users_without_reservation = User.get_users_without_reservation())
 
 @app.route('/appointments/statistics/most_popular_services/')
 @login_required(role="ADMIN")
 def most_popular_services():
+    
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
     return render_template("appointments/statistics.html", most_popular_services = Appointment.get_most_popular_services())

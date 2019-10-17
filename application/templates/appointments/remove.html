@@ -18,7 +18,6 @@
       <th>Remove</th>
     </tr>
     {% for appointment in appointments %}
-    {% if appointment.accountappointment[0].id == current_user.id %}
     <tr>
       <td>{{ appointment.start_time }}</td>  
       <td>{{ appointment.accountappointment[0].name }}</td>
@@ -43,8 +42,7 @@
     <input type="submit" value="Remove"/>
   </form>      
       </td>
-    </tr>
-  {% endif %}    
+    </tr>   
   {% endfor %}
   </table>
 

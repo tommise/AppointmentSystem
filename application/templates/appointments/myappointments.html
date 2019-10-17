@@ -13,7 +13,7 @@
           <th>Price</th>
           <th>Reserved</th>
         </tr>
-        {% for reservation in user_reservations %}
+        {% for reservation in appointments %}
         <tr>
           <td>{{ reservation.start_time }}</td>
           <td>{{ reservation.accountappointment[0].username}}</td>
