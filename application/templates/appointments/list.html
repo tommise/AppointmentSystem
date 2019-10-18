@@ -8,30 +8,37 @@
     <table class="table">
       <tr>
         <th>Appointment time</th>
-        <th>Employee</th>
-        <th>Reserved</th>        
+        <th>Reserved</th> 
+        <th>Employee</th>       
         <th>User</th>
         <th>Service</th>
         <th>Price</th>
       </tr>
       {% for appointment in appointments %}
       <tr>
-        <td>{{ appointment.start_time }}</td>  
-        <td>{{ appointment.accountappointment[0].name }}</td>
-        <td>{{ appointment.reserved }} </td>
+        <td>{{ appointment.start_time }}</td>
+        <td>{{ appointment.reserved }}</td>
 
-        {% if appointment.accountappointment[1] is defined %}
-        <td>{{ appointment.accountappointment[1].name }}</td>
+        {% if appointment.accountappointment[0].employee == True %}          
+          <td>{{ appointment.accountappointment[0].name}}</td>
         {% else %}
-        <td>-</td>
+          <td>{{ appointment.accountappointment[1].name}}</td>
+        {% endif %}          
+        
+        {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == False) %} 
+          <td>{{ appointment.accountappointment[1].name }}</td>  
+        {% endif %} 
+        
+        {% if appointment.accountappointment[1] is not defined %}
+          <td>-</td>
         {% endif %}
 
-        {% if (appointment.reserved == True) and (appointment.services[0] is defined) %}
-          <td>{{ appointment.services[0].service }}</td>        
-          <td>{{ appointment.services[0].price }}</td> 
-          {% else %}
+        {% if appointment.services[0] is defined %}
+          <td>{{ appointment.services[0].service }}</td>
+          <td>{{ appointment.services[0].price }}</td>  
+        {% else %}     
           <td>-</td>
-          <td>-</td> 
+          <td>-</td>
         {% endif %}
 
       </tr>

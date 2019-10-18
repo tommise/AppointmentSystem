@@ -12,7 +12,7 @@
   <table class="table table-sm">
     
     <tr>
-      <th>Appointment</th>
+      <th>Appointment time</th>
       <th>Employee</th>
       <th>Service</th>
       <th>Reserve</th>
@@ -20,8 +20,13 @@
     {% for appointment in appointments %}
     <tr>
       <td>{{ appointment.start_time }}</td>
-      <td>{{ appointment.accountappointment[0].username }}</td>
       
+      {% if appointment.accountappointment[0].employee == True %}          
+        <td>{{ appointment.accountappointment[0].name}}</td>
+      {% else %}
+        <td>{{ appointment.accountappointment[1].name}}</td>
+      {% endif %}          
+     
         <form method="POST" action="{{ url_for('appointment_set_reserved', appointment_id=appointment.id) }}">
             <td>{{ form.services }}</td>
             <td><input type="submit" value="Reserve"/></td>

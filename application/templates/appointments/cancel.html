@@ -18,7 +18,12 @@
     {% for reservation in appointments %}
     <tr>
       <td>{{ reservation.start_time }}</td>
-      <td>{{ reservation.accountappointment[0].username }}</td>
+
+      {% if reservation.accountappointment[0].employee == True %}          
+        <td>{{ reservation.accountappointment[0].name}}</td>
+      {% else %}
+        <td>{{ reservation.accountappointment[1].name}}</td>
+      {% endif %}
 
       {% if reservation.services[0] is defined %}
         <td>{{ reservation.services[0].service }}</td>

@@ -2,44 +2,44 @@
 
 {% block body %}
 
-{% if users_without_reservation is defined %}
+  {% if users_without_reservation is defined %}
 
-    <h3>Listing all users without an reservation</h3>
+      <h3>Listing all users without an reservation</h3>
 
-    <table class="table">
-        <tr>
-          <th>Name</th>
-          <th>Username</th>
-          <th></th>
-        </tr>
-        {% for user in users_without_reservation %}
-        <tr>
-          <td>{{ user.name }}</td>
-          <td>{{ user.username}}</td>   
-        </tr>
-        {% endfor %}
-    </table>
+      <table class="table">
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th></th>
+          </tr>
+          {% for user in users_without_reservation %}
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.username}}</td>   
+          </tr>
+          {% endfor %}
+      </table>
 
-{% endif %}
+  {% endif %}
 
-{% if most_popular_services is defined %}
+  {% if most_popular_services is defined %}
 
-    <h3>Listing the most popular services</h3>
+      <h3>Listing the most popular services</h3>
 
-    <table class="table">
-        <tr>
-          <th>Service</th>
-          <th>In no. of appointments</th>
-          <th></th>
-        </tr>
-        {% for service in most_popular_services %}
-        <tr>
-          <td>{{ service.name }}</td>
-          <td>{{ service.count }}</td>   
-        </tr>
-        {% endfor %}
-    </table>
+      <table class="table">
+          <tr>
+            <th>Service</th>
+            <th>In no. of appointments</th>
+            <th></th>
+          </tr>
+          {% for service in most_popular_services %}
+          <tr>
+            <td>{{ service.name }}</td>
+            <td>{{ service.count }}</td>   
+          </tr>
+          {% endfor %}
+      </table>
 
-{% endif %}
+  {% endif %}
 
 {% endblock %}
