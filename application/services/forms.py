@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField, validators
 
 class ServiceForm(FlaskForm):
-    service = StringField("Service: ", [validators.Length(min = 5, max=100,
+    service = StringField("Service: ", [validators.Length(min = 5, max=25,
         message="Service field error: Please enter a service with minimum 5 characters ")])   
 
     price = IntegerField('Price: ', [validators.NumberRange(min=1, max=1000,
