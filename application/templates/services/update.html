@@ -4,44 +4,21 @@
 {{ error }}
 
 <h3>Update a service</h3>
-<p>Please update service of choice by clicking "Update".</p>
-<p></p>
+<p>Please update a service of choice by clicking "Update".</p>
 
   <table class="table table-sm table-hover">
     <tr>
       <th>Service</th>
       <th>Price</th>
-      <th>Update service</th>
-      <th>Update price</th>  
       <th>Update</th>  
     </tr>
+
     {% for service in services %}
     <tr></tr>
       <td>{{ service.service }}</td>
       <td>{{ service.price}}</td>   
       
-            <form method="POST" action="{{ url_for('services_updates', service_id=service.id) }}">          
-                  
-                <td>
-                    {{ form.service }}
-                  </td>
-                  
-                    <ul>
-                      {% for error in form.service.errors %}
-                      <li>{{ error }}</li>
-                      {% endfor %}
-                    </ul>  
-                  
-                  <td>
-                      {{ form.price }}
-                    </td>
-                    
-                      <ul>
-                        {% for error in form.price.errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                      </ul>
-
+            <form method="POST" action="{{ url_for('services_update_by_id', service_id=service.id) }}">
               <td><input type="submit" value="Update"/></td>                            
             </form>                        
           </tr>

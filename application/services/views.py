@@ -82,15 +82,36 @@ def services_delete(service_id):
 @app.route("/services/update/", methods=["GET"])
 @login_required(role="ADMIN")
 def services_update():
-    
+    form = ServiceForm(obj=Service.query.first())
     if current_user.employee is not True:
         return redirect(url_for("my_appointments"))
 
-    return render_template("services/update.html", services = Service.query.all(), form = ServiceForm())
+    return render_template("services/update.html", services = Service.query.all(), form = form)
 
-@app.route("/services/update/<service_id>/", methods=["GET", "POST"])
+@app.route("/services/update/<service_id>/", methods=["POST"])
 @login_required(role="ADMIN")
-def services_updates(service_id):
+def services_update_by_id(service_id):
+
+    if current_user.employee is not True:
+        return redirect(url_for("my_appointments"))
+
+    update_service = Service.query.get(service_id)
+
+    form = ServiceForm(obj = update_service) 
+
+    if not form.validate():
+        return render_template("services/update.html", services = Service.query.all(), form = form)
+
+    update_service = Service.query.get(service_id)
+    update_service.service = form.service.data
+    update_service.price = form.price.data
+
+    db.session().commit()
+    return render_template("services/updateform.html", service = Service.query.get(service_id), form = form)
+
+@app.route("/services/update/commit/<service_id>/", methods=["POST"])
+@login_required(role="ADMIN")
+def services_commit_update(service_id):
 
     if current_user.employee is not True:
         return redirect(url_for("my_appointments"))
@@ -98,7 +119,7 @@ def services_updates(service_id):
     form = ServiceForm(request.form) 
 
     if not form.validate():
-        return render_template("services/update.html", services = Service.query.all(), form = form)
+        return render_template("services/updateform.html", service = Service.query.get(service_id), form = form)
 
     update_service = Service.query.get(service_id)
     update_service.service = form.service.data
