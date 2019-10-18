@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h3>Remove an appointment</h3>
+<h3>Remove my appointment</h3>
 <p>Please remove an appointment of choice by clicking "Remove".</p>
 <p>Note that you can only remove an appointment that is assigned to you.</p>
 <p>If the list is empty, you don't currently have any appointments.</p>
@@ -32,7 +32,7 @@
       {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == False) %} 
         <td>{{ appointment.accountappointment[1].name }}</td>  
       {% endif %} 
-      
+
       {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == True) %} 
         <td>{{ appointment.accountappointment[1].name }}</td>  
       {% endif %} 

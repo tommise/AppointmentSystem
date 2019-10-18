@@ -30,8 +30,8 @@
               <td>{{ reservation.accountappointment[1].name }}</td>  
             {% endif %} 
 
-            {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == True) %} 
-              <td>{{ appointment.accountappointment[1].name }}</td>  
+            {% if (reservation.accountappointment[1] is defined) and (reservation.accountappointment[1].employee == True) %} 
+              <td>{{ reservation.accountappointment[1].name }}</td>  
             {% endif %} 
             
             {% if reservation.accountappointment[1] is not defined %}

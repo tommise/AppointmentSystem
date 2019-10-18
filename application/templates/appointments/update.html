@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h3>Update an appointment</h3>
+<h3>Update my appointment</h3>
 <p>Please update an appointment of choice by clicking "Update".</p>
 <p>Note that you can only update an appointment that is assigned to you.</p>
 <p>If the list is empty, you don't currently have any appointments.</p>
@@ -10,8 +10,8 @@
   <table class="table table-sm table-hover">
     <tr>
       <th>Appointment time</th>
-      <th>Employee</th>
       <th>Reserved</th>
+      <th>Employee</th>
       <th>User</th>      
       <th>Service</th>
       <th>Price</th>
@@ -32,7 +32,11 @@
       {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == False) %} 
         <td>{{ appointment.accountappointment[1].name }}</td>  
       {% endif %} 
-      
+
+      {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == True) %} 
+        <td>{{ appointment.accountappointment[1].name }}</td>  
+      {% endif %} 
+
       {% if appointment.accountappointment[1] is not defined %}
         <td>-</td>
       {% endif %}
