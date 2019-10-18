@@ -19,7 +19,10 @@ INSERT INTO AccountAppointment (appointment_id, account_id) VALUES (?, ?);
 
 As an user, I am able to list all my reserved appointment times.
 ```
-SELECT Appointment.start_time, Appointment.reserved, Service.service FROM Appointment JOIN ServiceAppointment ON Appointment.service_id = Service.id JOIN AccountAppointment ON AccountAppointment.appointment_id = Appointment.id WHERE AccountAppointment.account_id = Account.id AND employee = True;
+SELECT Appointment.start_time, Appointment.reserved, Service.service FROM Appointment 
+	JOIN ServiceAppointment ON Appointment.service_id = Service.id 
+	JOIN AccountAppointment ON AccountAppointment.appointment_id = Appointment.id 
+	WHERE AccountAppointment.account_id = Account.id AND employee = True;
 ```
 
 #### Canceling appointment
@@ -40,7 +43,7 @@ INSERT INTO Account (name, username, password, employee) VALUES (?, ?, ?, False)
 
 As an user, I am able to log in to the site using my previously created username and password and log off the site.
 ```
-SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account WHERE Account.id = ?;
+SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account 	WHERE Account.id = ?;
 ```
 ## Employee
 
@@ -56,7 +59,10 @@ INSERT INTO Appointment (start_time, reserved) VALUES (?, False);
 
 As an employee, I am able to list my appointments
 ```
-SELECT Appointment.start_time, Appointment.reserved, Service.service FROM Appointment JOIN ServiceAppointment ON ServiceAppointment.service_id = Service.id JOIN AccountAppointment ON AccountAppointment.appointment_id = Appointment.id WHERE AccountAppointment.id = Account.id AND employee = False;
+SELECT Appointment.start_time, Appointment.reserved, Service.service FROM Appointment 
+	JOIN ServiceAppointment ON ServiceAppointment.service_id = Service.id 
+	JOIN AccountAppointment ON AccountAppointment.appointment_id = Appointment.id 
+	WHERE AccountAppointment.id = Account.id AND employee = False;
 ```
 #### Listing all appointments
 
@@ -68,7 +74,8 @@ SELECT * FROM Appointment;
 
 As an employee, I am able to update my appointments
 ```
-UPDATE Appointment SET Appointment.start_time = ?, Appointment.reserved WHERE Appointment.id = ?;
+UPDATE Appointment SET Appointment.start_time = ?, Appointment.reserved = ? 
+	WHERE Appointment.id = ?;
 ```
 #### Removing my appointment
 
@@ -95,7 +102,7 @@ SELECT Service.service, service.price FROM Service;
 
 As an employee, I am able to update all services
 ```
-UPDATE Service SET Service.service = ?, Service.price WHERE Service.id = ?;
+UPDATE Service SET Service.service = ?, Service.price = ? WHERE Service.id = ?;
 ```
 
 #### Removing a service
@@ -110,17 +117,27 @@ DELETE FROM Service WHERE Service.id = ?;
 As an employee, I am able to log in and off to the site using pre-made credentials.
 
 ```
-SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account WHERE Account.id = ?;
+SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account 	WHERE Account.id = ?;
 ```
 
 ### Statistics
 
-As an employee, I am able to list all users without an reservation
-```
-SELECT Service.service, COUNT(Service.id) FROM Service INNER JOIN ServiceAppointment ON ServiceAppointment.service_id = Service.id INNER JOIN Appointment ON ServiceAppointment.appointment_id = Appointment.id WHERE Appointment.reserved = True GROUP BY Service.service, Service.id ORDER BY COUNT(Service.id) DESC;
-```
-
 As an employee, I am able to list the most popular services
 ```
-SELECT Account.name, Account.username FROM Account LEFT JOIN AccountAppointment ON AccountAppointment.account_id = account.id LEFT JOIN Appointment ON AccountAppointment.appointment_id = appointment.id WHERE Account.employee = False GROUP BY account.name, account.username HAVING COUNT(Appointment.id) = 0;
+SELECT Service.service, COUNT(Service.id) FROM Service 
+	INNER JOIN ServiceAppointment ON ServiceAppointment.service_id = Service.id 
+	INNER JOIN Appointment ON ServiceAppointment.appointment_id = Appointment.id 
+	WHERE Appointment.reserved = True 
+	GROUP BY Service.service, Service.id 
+	ORDER BY COUNT(Service.id) DESC;
+```
+
+As an employee, I am able to list all users without an reservation
+```
+SELECT Account.name, Account.username FROM Account 
+	LEFT JOIN AccountAppointment ON AccountAppointment.account_id = account.id 
+	LEFT JOIN Appointment ON AccountAppointment.appointment_id = appointment.id 
+	WHERE Account.employee = False 
+	GROUP BY account.name, account.username 
+	HAVING COUNT(Appointment.id) = 0;
 ```
