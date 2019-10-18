@@ -25,15 +25,15 @@
           <td>{{ appointment.accountappointment[1].name}}</td>
         {% endif %}          
         
-        {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == False) %} 
-          <td>{{ appointment.accountappointment[1].name }}</td>  
-        {% endif %} 
+        {% if appointment.reserved == True %}
 
-        {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == True) %} 
-          <td>{{ appointment.accountappointment[1].name }}</td>  
-        {% endif %} 
-        
-        {% if appointment.accountappointment[1] is not defined %}
+          {% if appointment.accountappointment[1].employee == False %} 
+            <td>{{ appointment.accountappointment[1].name }}</td>
+            {% else %}
+            <td>{{ appointment.accountappointment[0].name }}</td>
+          {% endif %} 
+    
+        {% else %}
           <td>-</td>
         {% endif %}
 

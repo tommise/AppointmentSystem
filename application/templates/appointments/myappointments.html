@@ -24,17 +24,17 @@
               <td>{{ reservation.accountappointment[0].name}}</td>
             {% else %}
               <td>{{ reservation.accountappointment[1].name}}</td>
-            {% endif %}          
+            {% endif %}     
             
-            {% if (reservation.accountappointment[1] is defined) and (reservation.accountappointment[1].employee == False) %} 
-              <td>{{ reservation.accountappointment[1].name }}</td>  
-            {% endif %} 
+            {% if reservation.reserved == True %}
 
-            {% if (reservation.accountappointment[1] is defined) and (reservation.accountappointment[1].employee == True) %} 
-              <td>{{ reservation.accountappointment[1].name }}</td>  
-            {% endif %} 
+              {% if reservation.accountappointment[1].employee == False %} 
+                <td>{{ reservation.accountappointment[1].name }}</td>
+                {% else %}
+                <td>{{ reservation.accountappointment[0].name }}</td>
+              {% endif %} 
             
-            {% if reservation.accountappointment[1] is not defined %}
+            {% else %}
               <td>-</td>
             {% endif %}
 
