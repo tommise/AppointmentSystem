@@ -244,17 +244,17 @@ def appointments_updates(appointment_id):
     given_month = int(form.start_time.data.strftime('%m'))
     given_date = int(form.start_time.data.strftime('%d'))
 
-    # Checking if given time is in the past or way too ahead in the future (current_year + 1 year)
-    if current_year > given_year or current_year + 1 < given_year:
-        form.time.errors.append("The year you picked is in the past or way too ahead in the future.")
+    # Checking if given time is in the past or way too ahead in the future (current_year + 1 year) and excluding the appointment that is being updated
+    if current_year > given_year or current_year + 1 < given_year and update_appointment.start_time != form.start_time.data:
+        form.start_time.errors.append("The year you picked is in the past or way too ahead in the future.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
-    elif current_month > given_month and current_year == given_year:
-        form.time.errors.append("The month you picked is in the past.")
+    elif current_month > given_month and current_year == given_year  and update_appointment.start_time != form.start_time.data:
+        form.start_time.errors.append("The month you picked is in the past.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
-    elif current_month == given_month and current_day > given_date and current_year == given_year:
-        form.time.errors.append("The day you picked is in the past.")
+    elif current_month == given_month and current_day > given_date and current_year == given_year and update_appointment.start_time != form.start_time.data:
+        form.start_time.errors.append("The day you picked is in the past.")
         return render_template("appointments/updateform.html", appointment = Appointment.query.get(appointment_id), form = form)
 
     # Checking if chosen employee already has an appointment at this starting time (excluding the appointment that is being updated)
@@ -278,7 +278,7 @@ def appointments_updates(appointment_id):
         for appointment in appointment_times:
             # If there is customer info present in the appointment
             if len(appointment.accountappointment) > 1:
-                if appointment.accountappointment[1].id == form.users.data:
+                if appointment is not update_appointment and appointment.accountappointment[1].id == form.users.data:
                     return False
 
         return True
@@ -356,10 +356,12 @@ def appointment_set_reserved(appointment_id):
     def appointment_is_unique_for_user():
         current_appointment = Appointment.query.get(appointment_id)
         appointment_times = Appointment.query.filter_by(start_time = current_appointment.start_time)
-
+        
         for appointment in appointment_times:
             if len(appointment.accountappointment) > 1:
-                if appointment.accountappointment[1].id == current_user.id and appointment.id != appointment_id:
+                appointment_user = appointment.accountappointment[1]
+                
+                if appointment_user.id == current_user.id and current_appointment.start_time == appointment.start_time:
                     return False
 
         return True
