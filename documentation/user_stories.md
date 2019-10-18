@@ -27,10 +27,11 @@ SELECT Appointment.start_time, Appointment.reserved, Service.service FROM Appoin
 
 #### Canceling appointment
 
-As an user, I am able to cancel an appointment I have reserved.
+As an user, I am able to cancel an appointment I have reserved. 
 ```
 DELETE FROM AccountAppointment WHERE AccountAppointment.appointment_id = Appointment.id;
 ```
+*Employee data will be preserved before deleting the AccountAppointment associon table row.*
 
 #### Signing up
 
@@ -43,7 +44,8 @@ INSERT INTO Account (name, username, password, employee) VALUES (?, ?, ?, False)
 
 As an user, I am able to log in to the site using my previously created username and password and log off the site.
 ```
-SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account 	WHERE Account.id = ?;
+SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account
+	WHERE Account.id = ?;
 ```
 ## Employee
 
@@ -117,7 +119,8 @@ DELETE FROM Service WHERE Service.id = ?;
 As an employee, I am able to log in and off to the site using pre-made credentials.
 
 ```
-SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account 	WHERE Account.id = ?;
+SELECT Account.id, Account.name, Account.username, Account.password, Account.employee FROM Account
+	WHERE Account.id = ?;
 ```
 
 ### Statistics
