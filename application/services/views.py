@@ -102,11 +102,6 @@ def services_update_by_id(service_id):
     if not form.validate():
         return render_template("services/update.html", services = Service.query.all(), form = form)
 
-    update_service = Service.query.get(service_id)
-    update_service.service = form.service.data
-    update_service.price = form.price.data
-
-    db.session().commit()
     return render_template("services/updateform.html", service = Service.query.get(service_id), form = form)
 
 @app.route("/services/update/commit/<service_id>/", methods=["POST"])
@@ -119,6 +114,14 @@ def services_commit_update(service_id):
     form = ServiceForm(request.form) 
 
     if not form.validate():
+        return render_template("services/updateform.html", service = Service.query.get(service_id), form = form)
+
+    service_exists = Service.query.filter_by(service = form.service.data).first()
+
+    update_service = Service.query.get(service_id)
+
+    if service_exists and service_exists is not update_service:
+        form.service.errors.append("This service name is already in use. Please choose another service name.")
         return render_template("services/updateform.html", service = Service.query.get(service_id), form = form)
 
     update_service = Service.query.get(service_id)
