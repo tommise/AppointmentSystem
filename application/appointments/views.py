@@ -358,10 +358,30 @@ def appointment_set_reserved(appointment_id):
         appointment_times = Appointment.query.filter_by(start_time = current_appointment.start_time)
         
         for appointment in appointment_times:
+            
             if len(appointment.accountappointment) > 1:
-                appointment_user = appointment.accountappointment[1]
                 
-                if appointment_user.id == current_user.id and current_appointment.start_time == appointment.start_time:
+                appointment_user = appointment.accountappointment[1]
+
+                current_appointmentyear = int(current_appointment.start_time.strftime('%Y'))
+                current_appointmentmonth = int(current_appointment.start_time.strftime('%m'))
+                current_appointmentday = int(current_appointment.start_time.strftime('%d'))
+                current_appointmenthour = int(current_appointment.start_time.strftime('%H'))
+                current_appointmentminute = int(current_appointment.start_time.strftime('%M'))
+
+                appointment_year = int(appointment.start_time.strftime('%Y'))
+                appointment_month = int(appointment.start_time.strftime('%m'))
+                appointment_day = int(appointment.start_time.strftime('%d'))
+                appointment_hour = int(appointment.start_time.strftime('%H'))
+                appointment_minute = int(appointment.start_time.strftime('%M'))
+
+                if (appointment_year == current_appointmentyear 
+                    and appointment_month == current_appointmentmonth 
+                    and appointment_day == current_appointmentday 
+                    and appointment_hour == current_appointmenthour 
+                    and appointment_minute == current_appointmentminute 
+                    and appointment_user.id == current_user.id):
+
                     return False
 
         return True
