@@ -17,7 +17,7 @@
       <th>Price</th>
       <th>Remove</th>
     </tr>
-    
+
     {% for appointment in appointments %}
     <tr>
       <td>{{ appointment.start_time }}</td>
@@ -33,6 +33,10 @@
         <td>{{ appointment.accountappointment[1].name }}</td>  
       {% endif %} 
       
+      {% if (appointment.accountappointment[1] is defined) and (appointment.accountappointment[1].employee == True) %} 
+        <td>{{ appointment.accountappointment[1].name }}</td>  
+      {% endif %} 
+
       {% if appointment.accountappointment[1] is not defined %}
         <td>-</td>
       {% endif %}
