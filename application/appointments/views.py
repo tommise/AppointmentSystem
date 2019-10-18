@@ -122,6 +122,12 @@ def appointments_delete(appointment_id):
 
     appointment = Appointment.query.get(appointment_id)
 
+    if current_user.id != appointment.accountappointment[0].id:
+        return render_template("appointments/remove.html",
+            appointments = Appointment.query.join(User.appointments)
+            .filter(User.id == current_user.id)
+            .order_by(Appointment.start_time.asc()).all())        
+
     db.session().delete(appointment)
     db.session().commit()
 
@@ -151,7 +157,10 @@ def appointments_update(appointment_id):
     update_appointment = Appointment.query.get(appointment_id)
 
     if current_user.id != update_appointment.accountappointment[0].id:
-        return redirect(url_for("appointments_index"))
+        return render_template("appointments/update.html",
+            appointments = Appointment.query.join(User.appointments)
+            .filter(User.id == current_user.id)
+            .order_by(Appointment.start_time.asc()).all())
     
     # Populating the form fields with current information
     form = UpdateAppointmentForm(obj = update_appointment)
@@ -207,7 +216,10 @@ def appointments_updates(appointment_id):
     update_appointment = Appointment.query.get(appointment_id)
 
     if current_user.id != update_appointment.accountappointment[0].id:
-        return redirect(url_for("appointments_index"))
+        return render_template("appointments/update.html",
+            appointments = Appointment.query.join(User.appointments)
+            .filter(User.id == current_user.id)
+            .order_by(Appointment.start_time.asc()).all())
 
     form = UpdateAppointmentForm(request.form)
     
@@ -435,6 +447,12 @@ def appointment_set_cancel(appointment_id):
         return redirect(url_for("appointments_index"))
 
     appointment = Appointment.query.get(appointment_id)
+
+    if current_user.id != appointment.accountappointment[1].id:
+        return render_template("appointments/cancel.html",
+            appointments = Appointment.query.join(User.appointments)
+            .filter(User.id == current_user.id)
+            .order_by(Appointment.start_time.asc()).all())
 
     employee = appointment.accountappointment[0]
     
